@@ -84,7 +84,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             log.error(error + ": {}", id);
             return new ResponseEntity<>(HttpStatus.valueOf(404));
         }
-        if (userId != itemForUpdate.getOwner().getId()) {
+        if (!userId.equals(itemForUpdate.getOwner().getId())) {
             String error = "Пользователь с id {} не является владельцем вещи с id {}";
             log.error(error, userId, id);
             return new ResponseEntity<>(HttpStatus.valueOf(404));
