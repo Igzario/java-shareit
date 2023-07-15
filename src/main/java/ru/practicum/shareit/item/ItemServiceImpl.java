@@ -12,6 +12,7 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -44,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
     public ResponseEntity getItemsByUser(Long userId) {
         ArrayList<ItemDto> itemsList = new ArrayList<>();
         for (Item item : itemRepository.getItems()) {
-            if (item.getOwner().getId() == userId) {
+            if (Objects.equals(item.getOwner().getId(), userId)) {
                 itemsList.add(ItemMapper.toItemDto(item));
             }
         }

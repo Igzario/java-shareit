@@ -95,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
                 String error = "Email указан не верно";
                 log.error(error + ": {}", user.getEmail());
                 return new ResponseEntity<>(error, HttpStatus.valueOf(500));
-            } else if (validEmailAlreadyExists(user) != user && validEmailAlreadyExists(user).getId() != id) {
+            } else if (validEmailAlreadyExists(user) != user && !Objects.equals(validEmailAlreadyExists(user).getId(), id)) {
                 String error = "Пользователь с таким email уже существует";
                 log.error(error + ": {}", user);
                 return new ResponseEntity<>(error, HttpStatus.valueOf(409));
