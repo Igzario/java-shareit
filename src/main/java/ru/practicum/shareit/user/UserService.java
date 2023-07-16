@@ -1,19 +1,18 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.http.ResponseEntity;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.exception.*;
 
 import java.util.List;
 
 interface UserService {
     List<UserDto> getAllUsers();
 
-    ResponseEntity getUserDto(Long id);
+    UserDto getUserDto(Long id) throws UserWithIdNotFound;
 
-    ResponseEntity deleteUser(Long id);
+    void deleteUser(Long id) throws UserWithIdNotFound;
 
-    ResponseEntity addNewUser(User user);
+    UserDto addNewUser(UserDto userDto) throws UserWithEmailAlreadyExists;
 
-    ResponseEntity updateUser(User user, Long id);
+    UserDto updateUser(UserDto userDto, Long id) throws UserWithEmailAlreadyExists, UserWithIdNotFound;
 }

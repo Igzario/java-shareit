@@ -2,12 +2,13 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.validated.*;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.exception.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,26 +25,30 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity addNewUser(@Valid @RequestBody User user) {
-        log.info("Запрос на добавление пользователя {}", user);
-        return userService.addNewUser(user);
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto addNewUser(@Validated(Create.class) @RequestBody UserDto userDto) throws UserWithEmailAlreadyExists {
+        log.info("Запрос на добавление пользователя {}", userDto);
+        return userService.addNewUser(userDto);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity updateUser(@RequestBody User user, @PathVariable long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long id) throws UserWithEmailAlreadyExists, UserWithIdNotFound {
         log.info("Запрос на обновление пользователя с ID {}", id);
-        return userService.updateUser(user, id);
+        return userService.updateUser(userDto, id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getUser(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getUser(@PathVariable long id) throws UserWithIdNotFound {
         log.info("Запрос на вывод пользователя с ID {}", id);
         return userService.getUserDto(id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@PathVariable long id) throws UserWithIdNotFound {
         log.info("Запрос на удаление пользователя с ID {}", id);
-        return userService.deleteUser(id);
+        userService.deleteUser(id);
     }
 }

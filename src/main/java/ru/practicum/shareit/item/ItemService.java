@@ -1,19 +1,21 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.http.ResponseEntity;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.exception.*;
+
+import java.util.List;
 
 public interface ItemService {
 
-    ResponseEntity getItem(Long id);
+    ItemDto getItemDto(Long id) throws ItemWithIdNotFound;
 
-    ResponseEntity getItemsByUser(Long userId);
+    List<ItemDto> getItemsByUser(Long userId);
 
-    ResponseEntity deleteItem(Long id);
+    void deleteItem(Long id);
 
-    ResponseEntity addNewItem(ItemDto item, Long userId);
+    ItemDto addNewItem(ItemDto item, Long userId) throws ItemWithIdNotFound;
 
-    ResponseEntity updateItem(ItemDto item, Long id, Long userId);
+    ItemDto updateItem(ItemDto item, Long id, Long userId) throws UserWithIdNotFound, ItemWithIdNotFound, UserNotHaveThisItem;
 
-    ResponseEntity searchItem(Long userId, String search);
+    List<ItemDto> searchItem(Long userId, String search);
 }

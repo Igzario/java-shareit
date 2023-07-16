@@ -1,20 +1,26 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.Data;
+import ru.practicum.shareit.validated.*;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Data
 public class ItemDto {
     private final Long id;
-    @NotNull(message = "Ошибка ввода - Name: null")
-    @NotEmpty(message = "Ошибка ввода - Name: empty")
+
+    @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
+    @NotBlank(message = "Ошибка ввода - пустое поле Name", groups = Create.class)
     private final String name;
-    @NotNull(message = "Ошибка ввода - Description: null")
-    @NotEmpty(message = "Ошибка ввода - Description: empty")
+
+    @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
+    @NotBlank(message = "Ошибка ввода - пустое поле Description", groups = Create.class)
     private final String description;
-    @NotNull(message = "Ошибка ввода - Available: null")
+
+    @NotNull(message = "Ошибка ввода - Available: null", groups = Create.class)
     private final Boolean available;
+
     private final Long requestId;
 }

@@ -3,14 +3,13 @@ package ru.practicum.shareit.item;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepositoryImpl;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.exception.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,20 +24,19 @@ public class ItemRepositoryImpl implements ItemRepository {
     private Long id = 0L;
 
     @Override
-    public ResponseEntity addNewItem(ItemDto itemDto, Long userId) {
+    public ItemDto addNewItem(ItemDto itemDto, Long userId) throws ItemWithIdNotFound {
         Item newItem = ItemMapper.toDtoItem(itemDto);
         User user = userRepository.getUser(userId);
         if (user == null) {
-            String error = "Пользователь с таким id не существует";
-            log.error(error + ": {}", id);
-            return new ResponseEntity<>(HttpStatus.valueOf(404));
+            log.error("Error generate: ItemWithIdNotFound");
+            throw new ItemWithIdNotFound();
         }
         id++;
         newItem.setId(id);
         newItem.setOwner(user);
         items.add(newItem);
         log.info("Добавлен Item: {}", newItem);
-        return new ResponseEntity<>(ItemMapper.toItemDto(newItem), HttpStatus.valueOf(200));
+        return ItemMapper.toItemDto(newItem);
     }
 
     @Override
@@ -52,53 +50,48 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public ResponseEntity getItemDto(Long id) {
+    public ItemDto getItemDto(Long id) throws ItemWithIdNotFound {
         Item item = getItem(id);
         if (item == null) {
-            String error = "Item с таким id не существует";
-            log.error(error + ": {}", id);
-            return new ResponseEntity<>(HttpStatus.valueOf(404));
+            log.error("Error generate: ItemWithIdNotFound");
+            throw new ItemWithIdNotFound();
         }
         log.info("Возвращен Item с id: {}", id);
-        return new ResponseEntity<>(ItemMapper.toItemDto(item), HttpStatus.valueOf(200));
+        return ItemMapper.toItemDto(item);
     }
 
     @Override
-    public ResponseEntity deleteItem(Long id) {
+    public void deleteItem(Long id) {
         items.removeIf(item -> item.getId().equals(id));
         log.info("Удален Item с id: {}", id);
-        return new ResponseEntity<>(HttpStatus.valueOf(200));
     }
 
     @Override
-    public ResponseEntity updateItem(ItemDto item, Long id, Long userId) {
+    public ItemDto updateItem(ItemDto item, Long id, Long userId) throws ItemWithIdNotFound, UserWithIdNotFound, UserNotHaveThisItem {
         Item itemForUpdate = getItem(id);
         if (itemForUpdate == null) {
-            String error = "Item с таким id не существует";
-            log.error(error + ": {}", id);
-            return new ResponseEntity<>(HttpStatus.valueOf(404));
+            log.error("Error generate: ItemWithIdNotFound");
+            throw new ItemWithIdNotFound();
         }
         User user = userRepository.getUser(userId);
         if (user == null) {
-            String error = "Пользователь с таким id не существует";
-            log.error(error + ": {}", id);
-            return new ResponseEntity<>(HttpStatus.valueOf(404));
+            log.error("Error generate: UserWithIdNotFound");
+            throw new UserWithIdNotFound();
         }
         if (!userId.equals(itemForUpdate.getOwner().getId())) {
-            String error = "Пользователь с id {} не является владельцем вещи с id {}";
-            log.error(error, userId, id);
-            return new ResponseEntity<>(HttpStatus.valueOf(404));
+            log.error("Error generate: UserWithIdNotFound");
+            throw new UserNotHaveThisItem(userId, id);
         }
-        if (item.getName() != null && !item.getName().isEmpty()) {
+        if (item.getName() != null) {
             itemForUpdate.setName(item.getName());
         }
-        if (item.getDescription() != null && !item.getDescription().isEmpty()) {
+        if (item.getDescription() != null) {
             itemForUpdate.setDescription(item.getDescription());
         }
         if (item.getAvailable() != null) {
             itemForUpdate.setAvailable(item.getAvailable());
         }
         log.info("Item обновлен: {}", itemForUpdate);
-        return new ResponseEntity<>(ItemMapper.toItemDto(itemForUpdate), HttpStatus.valueOf(200));
+        return ItemMapper.toItemDto(itemForUpdate);
     }
 }

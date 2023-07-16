@@ -2,10 +2,9 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.exception.*;
 
 import java.util.List;
 
@@ -20,22 +19,22 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity getUserDto(Long id) {
+    public UserDto getUserDto(Long id) throws UserWithIdNotFound {
         return repository.getUserDto(id);
     }
 
     @Override
-    public ResponseEntity deleteUser(Long id) {
-        return repository.deleteUser(id);
+    public void deleteUser(Long id) throws UserWithIdNotFound {
+        repository.deleteUser(id);
     }
 
     @Override
-    public ResponseEntity addNewUser(User user) {
-        return repository.addNewUser(user);
+    public UserDto addNewUser(UserDto userDto) throws UserWithEmailAlreadyExists {
+        return repository.addNewUser(userDto);
     }
 
     @Override
-    public ResponseEntity updateUser(User user, Long id) {
-        return repository.updateUser(user, id);
+    public UserDto updateUser(UserDto userDto, Long id) throws UserWithEmailAlreadyExists, UserWithIdNotFound {
+        return repository.updateUser(userDto, id);
     }
 }
