@@ -62,11 +62,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDto addNewUser(UserDto userDto) throws UserWithEmailAlreadyExists {
+    public UserDto addNewUser(UserDto userDto) throws EmailAlreadyExists {
         User user = UserMapper.toDtoUser(userDto);
         if (validEmailAlreadyExists(user) != user) {
-            log.error("Error generate: UserWithEmailAlreadyExists");
-            throw new UserWithEmailAlreadyExists();
+            log.error("Error generate: EmailAlreadyExists");
+            throw new EmailAlreadyExists();
         }
         id++;
         user.setId(id);
@@ -76,7 +76,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Long id) throws UserWithEmailAlreadyExists, UserWithIdNotFound {
+    public UserDto updateUser(UserDto userDto, Long id) throws EmailAlreadyExists, UserWithIdNotFound {
         User user = UserMapper.toDtoUser(userDto);
         User userForUpdate = getUser(id);
         if (userForUpdate == null) {
@@ -89,7 +89,7 @@ public class UserRepositoryImpl implements UserRepository {
         if (user.getEmail() != null) {
             if (validEmailAlreadyExists(user) != user && !Objects.equals(validEmailAlreadyExists(user).getId(), id)) {
                 log.error("Error generate: UserWithEmailAlreadyExists");
-                throw new UserWithEmailAlreadyExists();
+                throw new EmailAlreadyExists();
             } else {
                 userForUpdate.setEmail(user.getEmail());
             }

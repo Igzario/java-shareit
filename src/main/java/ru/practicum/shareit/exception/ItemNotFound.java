@@ -1,7 +1,7 @@
 package ru.practicum.shareit.exception;
 
-public class ItemWithIdNotFound extends Exception {
-    public ItemWithIdNotFound() {
+public class ItemNotFound extends Exception {
+    public ItemNotFound() {
         super("Item с таким id не существует");
     }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 public class ErrorHandler {
 
     @ExceptionHandler
-    public ResponseEntity UserWithEmailAlreadyExists(final UserWithEmailAlreadyExists exception) {
+    public ResponseEntity UserWithEmailAlreadyExists(final EmailAlreadyExists exception) {
         log.error(HttpStatus.valueOf(409) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(409));
     }
@@ -25,7 +25,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity ItemWithIdNotFound(final ItemWithIdNotFound exception) {
+    public ResponseEntity ItemWithIdNotFound(final ItemNotFound exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
     }

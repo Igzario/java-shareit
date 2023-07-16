@@ -26,14 +26,14 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addNewUser(@Validated(Create.class) @RequestBody UserDto userDto) throws UserWithEmailAlreadyExists {
+    public UserDto addNewUser(@Validated(Create.class) @RequestBody UserDto userDto) throws EmailAlreadyExists {
         log.info("Запрос на добавление пользователя {}", userDto);
         return userService.addNewUser(userDto);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long id) throws UserWithEmailAlreadyExists, UserWithIdNotFound {
+    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long id) throws EmailAlreadyExists, UserWithIdNotFound {
         log.info("Запрос на обновление пользователя с ID {}", id);
         return userService.updateUser(userDto, id);
     }

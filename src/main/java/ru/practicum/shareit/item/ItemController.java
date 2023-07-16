@@ -20,7 +20,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto addNewUser(@Validated(Create.class) @RequestBody ItemDto itemDto, @RequestHeader(value = "X-Sharer-User-Id") Long userId) throws ItemWithIdNotFound {
+    public ItemDto addNewUser(@Validated(Create.class) @RequestBody ItemDto itemDto, @RequestHeader(value = "X-Sharer-User-Id") Long userId) throws ItemNotFound {
         log.info("Запрос на добавление Item {} с userId {}", itemDto, userId);
         return itemService.addNewItem(itemDto, userId);
     }
@@ -29,14 +29,14 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public ItemDto updateItem(@Validated(Update.class) @RequestBody ItemDto itemDto, @PathVariable long id,
                               @RequestHeader(value = "X-Sharer-User-Id") Long userId)
-            throws UserWithIdNotFound, ItemWithIdNotFound, UserNotHaveThisItem {
+            throws UserWithIdNotFound, ItemNotFound, UserNotHaveThisItem {
         log.info("Запрос на обновление Item с ID {}", id);
         return itemService.updateItem(itemDto, id, userId);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto getItem(@PathVariable long id) throws ItemWithIdNotFound {
+    public ItemDto getItem(@PathVariable long id) throws ItemNotFound {
         log.info("Запрос на вывод Item с ID {}", id);
         return itemService.getItemDto(id);
     }

@@ -29,12 +29,12 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto addNewUser(UserDto userDto) throws UserWithEmailAlreadyExists {
+    public UserDto addNewUser(UserDto userDto) throws EmailAlreadyExists {
         return repository.addNewUser(userDto);
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Long id) throws UserWithEmailAlreadyExists, UserWithIdNotFound {
+    public UserDto updateUser(UserDto userDto, Long id) throws EmailAlreadyExists, UserWithIdNotFound {
         return repository.updateUser(userDto, id);
     }
 }

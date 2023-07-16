@@ -21,7 +21,7 @@ public class ItemServiceImpl implements ItemService {
     final ItemRepositoryImpl itemRepository;
 
     @Override
-    public ItemDto getItemDto(Long id) throws ItemWithIdNotFound {
+    public ItemDto getItemDto(Long id) throws ItemNotFound {
         return itemRepository.getItemDto(id);
     }
 
@@ -31,12 +31,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto addNewItem(ItemDto item, Long userId) throws ItemWithIdNotFound {
+    public ItemDto addNewItem(ItemDto item, Long userId) throws ItemNotFound {
         return itemRepository.addNewItem(item, userId);
     }
 
     @Override
-    public ItemDto updateItem(ItemDto item, Long id, Long userId) throws UserWithIdNotFound, ItemWithIdNotFound, UserNotHaveThisItem {
+    public ItemDto updateItem(ItemDto item, Long id, Long userId) throws UserWithIdNotFound, ItemNotFound, UserNotHaveThisItem {
         return itemRepository.updateItem(item, id, userId);
     }
 

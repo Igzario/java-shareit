@@ -24,12 +24,12 @@ public class ItemRepositoryImpl implements ItemRepository {
     private Long id = 0L;
 
     @Override
-    public ItemDto addNewItem(ItemDto itemDto, Long userId) throws ItemWithIdNotFound {
+    public ItemDto addNewItem(ItemDto itemDto, Long userId) throws ItemNotFound {
         Item newItem = ItemMapper.toDtoItem(itemDto);
         User user = userRepository.getUser(userId);
         if (user == null) {
-            log.error("Error generate: ItemWithIdNotFound");
-            throw new ItemWithIdNotFound();
+            log.error("Error generate: ItemNotFound");
+            throw new ItemNotFound();
         }
         id++;
         newItem.setId(id);
@@ -50,11 +50,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public ItemDto getItemDto(Long id) throws ItemWithIdNotFound {
+    public ItemDto getItemDto(Long id) throws ItemNotFound {
         Item item = getItem(id);
         if (item == null) {
-            log.error("Error generate: ItemWithIdNotFound");
-            throw new ItemWithIdNotFound();
+            log.error("Error generate: ItemNotFound");
+            throw new ItemNotFound();
         }
         log.info("Возвращен Item с id: {}", id);
         return ItemMapper.toItemDto(item);
@@ -67,11 +67,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public ItemDto updateItem(ItemDto item, Long id, Long userId) throws ItemWithIdNotFound, UserWithIdNotFound, UserNotHaveThisItem {
+    public ItemDto updateItem(ItemDto item, Long id, Long userId) throws ItemNotFound, UserWithIdNotFound, UserNotHaveThisItem {
         Item itemForUpdate = getItem(id);
         if (itemForUpdate == null) {
-            log.error("Error generate: ItemWithIdNotFound");
-            throw new ItemWithIdNotFound();
+            log.error("Error generate: ItemNotFound");
+            throw new ItemNotFound();
         }
         User user = userRepository.getUser(userId);
         if (user == null) {

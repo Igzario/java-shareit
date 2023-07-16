@@ -12,7 +12,7 @@ interface UserService {
 
     void deleteUser(Long id) throws UserWithIdNotFound;
 
-    UserDto addNewUser(UserDto userDto) throws UserWithEmailAlreadyExists;
+    UserDto addNewUser(UserDto userDto) throws EmailAlreadyExists;
 
-    UserDto updateUser(UserDto userDto, Long id) throws UserWithEmailAlreadyExists, UserWithIdNotFound;
+    UserDto updateUser(UserDto userDto, Long id) throws EmailAlreadyExists, UserWithIdNotFound;
 }
