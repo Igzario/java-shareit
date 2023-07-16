@@ -13,25 +13,25 @@ import java.util.Map;
 public class ErrorHandler {
 
     @ExceptionHandler
-    public ResponseEntity EmailAlreadyExists(final EmailAlreadyExists exception) {
+    public ResponseEntity emailAlreadyExists(final EmailAlreadyExists exception) {
         log.error(HttpStatus.valueOf(409) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(409));
     }
 
     @ExceptionHandler
-    public ResponseEntity UserWithIdNotFound(final UserWithIdNotFound exception) {
+    public ResponseEntity userWithIdNotFound(final UserWithIdNotFound exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler
-    public ResponseEntity ItemNotFound(final ItemNotFound exception) {
+    public ResponseEntity itemNotFound(final ItemNotFound exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler
-    public ResponseEntity UserNotHaveThisItem(final UserNotHaveThisItem exception) {
+    public ResponseEntity userNotHaveThisItem(final UserNotHaveThisItem exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
     }
