@@ -47,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
             commentDtoList.add(CommentMapper.toCommentDto(
                     comment, autor));
         });
-        if (item.getOwner() == userID) {
+        if (item.getOwner().equals(userID)) {
             List<Booking> bookings = bookingRepository.findBookingByItemIdAndStatusIsNotAndEndDateAfter(itemId, Status.REJECTED, LocalDateTime.now().minusSeconds(5));
             bookings.sort((o1, o2) -> {
                 if (o1.getStartDate().isBefore(o2.getStartDate())) {
@@ -91,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(ItemDto item, Long id, Long userId) throws EntityNotFoundException, UserNotHaveThisItemException {
         Item itemForUpdate = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Item.class, id));
-        if (itemForUpdate.getOwner() == userId) {
+        if (itemForUpdate.getOwner().equals(userId)) {
             if (item.getName() != null) {
                 itemForUpdate.setName(item.getName());
             }
@@ -116,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
         List<Item> items = itemRepository.findByOwner(userId);
         List<ItemDtoForOwner> itemsList = new ArrayList<>();
         items.forEach(item -> {
-            if (item.getOwner() == userId) {
+            if (item.getOwner().equals(userId)) {
                 List<Booking> bookings = bookingRepository.findBookingByItemId(item.getId());
                 if (bookings.isEmpty()) {
                     itemsList.add(ItemMapper.toItemDtoForOwner(item, null, null));

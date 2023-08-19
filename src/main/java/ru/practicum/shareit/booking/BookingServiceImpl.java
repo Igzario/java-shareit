@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
             log.info("Сгенерирован TimeBookingException");
             throw new TimeBookingException();
         }
-        if (item.getOwner() == userId) {
+        if (item.getOwner().equals(userId)) {
             log.info("Сгенерирован UserIsOwnerItemException");
             throw new UserIsOwnerItemException(userId, item.getId());
         }
@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new EntityNotFoundException(Booking.class, userId));
         User user = userRepository.findById(booking.getBookerId()).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
         Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() -> new UserNotHaveThisItemException(userId, booking.getItemId()));
-        if (item.getOwner() == userId) {
+        if (item.getOwner().equals(userId)) {
             if (approved) {
                 if (booking.getStatus() != Status.APPROVED) {
                     booking.setStatus(Status.APPROVED);
@@ -89,7 +89,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new EntityNotFoundException(Booking.class, userId));
         User user = userRepository.findById(booking.getBookerId()).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
         Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() -> new UserNotHaveThisItemException(userId, booking.getItemId()));
-        if (userId == item.getOwner() || userId == booking.getBookerId()) {
+        if (userId.equals(item.getOwner()) || userId.equals(booking.getBookerId())) {
             log.info("Возвращено бронирование: {}", booking);
             return BookingMapper.toBookingDto(booking, UserMapper.toUserDto(user), ItemMapper.toItemDto(item));
         } else {
