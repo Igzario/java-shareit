@@ -45,16 +45,16 @@ public class ItemMapper {
     }
 
     public static ItemDtoWithComments toItemDtoWithComments(Item item, BookingDtoForItemOwner lastBooking, BookingDtoForItemOwner nextBooking, ArrayList<CommentDto> comments) {
-        ItemDtoWithComments ItemDtoWithComments = new ItemDtoWithComments(
+        ItemDtoWithComments itemDtoWithComments = new ItemDtoWithComments(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.isAvailable(),
                 item.getRequest() != null ? item.getRequest() : null
         );
-        ItemDtoWithComments.setNextBooking(nextBooking);
-        ItemDtoWithComments.setLastBooking(lastBooking);
-        ItemDtoWithComments.setComments(comments);
-        return ItemDtoWithComments;
+        itemDtoWithComments.setNextBooking(nextBooking);
+        itemDtoWithComments.setLastBooking(lastBooking);
+        itemDtoWithComments.setComments(comments);
+        return itemDtoWithComments;
     }
 }

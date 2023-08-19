@@ -60,9 +60,9 @@ public class ItemServiceImpl implements ItemService {
             if (bookings.isEmpty()) {
                 return ItemMapper.toItemDtoWithComments(item, lastBooking, nextBooking, commentDtoList);
             }
-            lastBooking = BookingMapper.BookingDtoForItemOwner(bookings.get(0));
+            lastBooking = BookingMapper.bookingDtoForItemOwner(bookings.get(0));
             if (bookings.size() > 2) {
-                nextBooking = BookingMapper.BookingDtoForItemOwner(bookings.get(bookings.size() - 2));
+                nextBooking = BookingMapper.bookingDtoForItemOwner(bookings.get(bookings.size() - 2));
             }
             return ItemMapper.toItemDtoWithComments(item, lastBooking, nextBooking, commentDtoList);
         }
@@ -121,8 +121,8 @@ public class ItemServiceImpl implements ItemService {
                 if (bookings.isEmpty()) {
                     itemsList.add(ItemMapper.toItemDtoForOwner(item, null, null));
                 } else {
-                    BookingDtoForItemOwner lastBooking = BookingMapper.BookingDtoForItemOwner(bookings.get(0));
-                    BookingDtoForItemOwner nextBooking = BookingMapper.BookingDtoForItemOwner(bookings.get(bookings.size() - 1));
+                    BookingDtoForItemOwner lastBooking = BookingMapper.bookingDtoForItemOwner(bookings.get(0));
+                    BookingDtoForItemOwner nextBooking = BookingMapper.bookingDtoForItemOwner(bookings.get(bookings.size() - 1));
                     itemsList.add(ItemMapper.toItemDtoForOwner(item, lastBooking, nextBooking));
                 }
             } else {

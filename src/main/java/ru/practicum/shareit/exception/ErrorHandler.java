@@ -43,43 +43,43 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity ItemStatusUnAvailableException(final ItemStatusUnAvailableException exception) {
+    public ResponseEntity itemStatusUnAvailableException(final ItemStatusUnAvailableException exception) {
         log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler
-    public ResponseEntity TimeBookingException(final TimeBookingException exception) {
+    public ResponseEntity timeBookingException(final TimeBookingException exception) {
         log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler
-    public ResponseEntity BookingUserException(final BookingUserException exception) {
+    public ResponseEntity bookingUserException(final BookingUserException exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler
-    public ResponseEntity UnsupportedStatusException(final UnsupportedStatusException exception) {
+    public ResponseEntity unsupportedStatusException(final UnsupportedStatusException exception) {
         log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler
-    public ResponseEntity BookingAlwaysApprovedException(final BookingAlwaysApprovedException exception) {
+    public ResponseEntity bookingAlwaysApprovedException(final BookingAlwaysApprovedException exception) {
         log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler
-    public ResponseEntity UserIsOwnerItemException(final UserIsOwnerItemException exception) {
+    public ResponseEntity userIsOwnerItemException(final UserIsOwnerItemException exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler
-    public ResponseEntity AddCommentException(final AddCommentException exception) {
+    public ResponseEntity addCommentException(final AddCommentException exception) {
         log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(400));
     }

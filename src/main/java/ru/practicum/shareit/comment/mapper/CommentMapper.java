@@ -17,12 +17,13 @@ public class CommentMapper {
                 comment.getCreated()
         );
     }
-    public static Comment toComment(CommentDto commentDto, Item item, User autor) {
+
+    public static Comment toComment(CommentDto commentDto, Item item, User author) {
         Comment comment = new Comment();
         comment.setId(commentDto.getId());
         comment.setText(commentDto.getText());
         comment.setItemId(item.getId());
-        comment.setAuthorId(autor.getId());
+        comment.setAuthorId(author.getId());
         comment.setCreated(LocalDateTime.now());
         return comment;
 

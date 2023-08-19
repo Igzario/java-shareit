@@ -26,7 +26,7 @@ public class BookingMapper {
         return newBooking;
     }
 
-    public static BookingDtoForItemOwner BookingDtoForItemOwner(Booking booking) {
+    public static BookingDtoForItemOwner bookingDtoForItemOwner(Booking booking) {
         return new BookingDtoForItemOwner(
                 booking.getId(),
                 booking.getBookerId()
