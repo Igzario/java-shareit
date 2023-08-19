@@ -18,21 +18,69 @@ public class ErrorHandler {
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(409));
     }
 
+//    @ExceptionHandler
+//    public ResponseEntity userWithIdNotFound(final UserWithIdNotFound exception) {
+//        log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
+//        return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
+//    }
+//
+//    @ExceptionHandler
+//    public ResponseEntity itemNotFound(final ItemNotFound exception) {
+//        log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
+//        return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
+//    }
+
     @ExceptionHandler
-    public ResponseEntity userWithIdNotFound(final UserWithIdNotFound exception) {
+    public ResponseEntity userNotHaveThisItem(final UserNotHaveThisItemException exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler
-    public ResponseEntity itemNotFound(final ItemNotFound exception) {
+    public ResponseEntity entityNotFoundException(final EntityNotFoundException exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler
-    public ResponseEntity userNotHaveThisItem(final UserNotHaveThisItem exception) {
+    public ResponseEntity ItemStatusUnAvailableException(final ItemStatusUnAvailableException exception) {
+        log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
+        return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity TimeBookingException(final TimeBookingException exception) {
+        log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
+        return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity BookingUserException(final BookingUserException exception) {
         log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity UnsupportedStatusException(final UnsupportedStatusException exception) {
+        log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity BookingAlwaysApprovedException(final BookingAlwaysApprovedException exception) {
+        log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity UserIsOwnerItemException(final UserIsOwnerItemException exception) {
+        log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(404));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity AddCommentException(final AddCommentException exception) {
+        log.error(HttpStatus.valueOf(400) + " " + exception.getMessage());
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.valueOf(400));
     }
 }

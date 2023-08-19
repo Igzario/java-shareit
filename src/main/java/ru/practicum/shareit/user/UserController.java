@@ -33,21 +33,21 @@ public class UserController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long id) throws EmailAlreadyExists, UserWithIdNotFound {
+    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long id) throws EmailAlreadyExists, EntityNotFoundException {
         log.info("Запрос на обновление пользователя с ID {}", id);
         return userService.updateUser(userDto, id);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUser(@PathVariable long id) throws UserWithIdNotFound {
+    public UserDto getUser(@PathVariable long id) throws EntityNotFoundException {
         log.info("Запрос на вывод пользователя с ID {}", id);
-        return userService.getUserDto(id);
+        return userService.findUserDtoById(id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable long id) throws UserWithIdNotFound {
+    public void deleteUser(@PathVariable long id) throws EntityNotFoundException {
         log.info("Запрос на удаление пользователя с ID {}", id);
         userService.deleteUser(id);
     }
