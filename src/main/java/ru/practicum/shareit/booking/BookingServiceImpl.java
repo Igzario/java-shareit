@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoFromRequest;
 import ru.practicum.shareit.booking.enums.Status;
-import ru.practicum.shareit.booking.enums.StatusFromRequest;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.ItemRepository;
