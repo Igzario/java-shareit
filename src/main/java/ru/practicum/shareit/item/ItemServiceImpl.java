@@ -84,10 +84,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(ItemDto item, Long id, Long userId) throws EntityNotFoundException, UserNotHaveThisItemException {
         Item itemForUpdate = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Item.class, id));
         if (itemForUpdate.getOwner().equals(userId)) {
-            if (item.getName()!=null && !item.getName().isBlank()) {
+            if (item.getName() != null && !item.getName().isBlank()) {
                 itemForUpdate.setName(item.getName());
             }
-            if (item.getDescription()!=null && !item.getDescription().isBlank()) {
+            if (item.getDescription() != null && !item.getDescription().isBlank()) {
                 itemForUpdate.setDescription(item.getDescription());
             }
             if (item.getAvailable() != null) {
