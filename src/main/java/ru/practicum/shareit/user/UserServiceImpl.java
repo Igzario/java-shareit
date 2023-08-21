@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,10 +49,9 @@ class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(Long id) throws EntityNotFoundException {
-        try {
-            log.info("Удален пользователь с ID: {}", id);
+        if (repository.existsById(id))
             repository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
+        else {
             log.info("Сгенерирован EntityNotFoundException");
             throw new EntityNotFoundException(User.class, id);
         }
@@ -77,11 +75,11 @@ class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, Long id) throws EmailAlreadyExists, EntityNotFoundException {
         User user = UserMapper.toDtoUser(userDto);
         User userForUpdate = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, id));
-        if (user.getName() != null) {
+        if (user.getName() != null && !user.getName().isBlank()) {
             userForUpdate.setName(user.getName());
         }
         try {
-            if (user.getEmail() != null) {
+            if (user.getEmail() != null && !user.getEmail().isBlank()) {
                 if (userForUpdate.getEmail() == user.getEmail()) {
                     log.info("Пользователь обновлен: {}", userForUpdate);
                     return UserMapper.toUserDto(userForUpdate);

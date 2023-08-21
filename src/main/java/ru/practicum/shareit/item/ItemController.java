@@ -22,7 +22,8 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto addNewUser(@Validated(Create.class) @RequestBody ItemDto itemDto, @RequestHeader(value = "X-Sharer-User-Id") Long userId) throws EntityNotFoundException {
+    public ItemDto addNewUser(@Validated(Create.class) @RequestBody ItemDto itemDto,
+                              @RequestHeader(value = "X-Sharer-User-Id") Long userId) throws EntityNotFoundException {
         log.info("Запрос на добавление Item {} с userId {}", itemDto, userId);
         return itemService.addNewItem(itemDto, userId);
     }
@@ -60,7 +61,8 @@ public class ItemController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> searchItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId, @RequestParam("text") String search) {
+    public List<ItemDto> searchItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+                                    @RequestParam("text") String search) {
         log.info("Запрос на поиск Item по тексту: {}", search);
         return itemService.searchItem(userId, search);
     }

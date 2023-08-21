@@ -1,5 +1,4 @@
 package ru.practicum.shareit.item.mapper;
-
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDtoForItemOwner;
 import ru.practicum.shareit.comment.dto.CommentDto;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 
 @UtilityClass
 public class ItemMapper {
-    public static ItemDto toItemDto(Item item) {
+    public ItemDto toItemDto(Item item) {
         return new ItemDto(
                 item.getId(),
                 item.getName(),
@@ -22,7 +21,7 @@ public class ItemMapper {
         );
     }
 
-    public static Item toDtoItem(ItemDto itemDto) {
+    public Item toDtoItem(ItemDto itemDto) {
         Item newItem = new Item();
         newItem.setId(itemDto.getId());
         newItem.setName(itemDto.getName());
@@ -31,7 +30,7 @@ public class ItemMapper {
         return newItem;
     }
 
-    public static ItemDtoForOwner toItemDtoForOwner(Item item, BookingDtoForItemOwner lastBooking, BookingDtoForItemOwner nextBooking) {
+    public ItemDtoForOwner toItemDtoForOwner(Item item, BookingDtoForItemOwner lastBooking, BookingDtoForItemOwner nextBooking) {
         ItemDtoForOwner itemDtoForOwner = new ItemDtoForOwner(
                 item.getId(),
                 item.getName(),
@@ -44,7 +43,7 @@ public class ItemMapper {
         return itemDtoForOwner;
     }
 
-    public static ItemDtoWithComments toItemDtoWithComments(Item item, BookingDtoForItemOwner lastBooking, BookingDtoForItemOwner nextBooking, ArrayList<CommentDto> comments) {
+    public ItemDtoWithComments toItemDtoWithComments(Item item, BookingDtoForItemOwner lastBooking, BookingDtoForItemOwner nextBooking, ArrayList<CommentDto> comments) {
         ItemDtoWithComments itemDtoWithComments = new ItemDtoWithComments(
                 item.getId(),
                 item.getName(),

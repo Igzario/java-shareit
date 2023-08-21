@@ -19,6 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getAllUsers() {
         log.info("Запрос на вывод спика пользователей");
         return userService.getAllUsers();
@@ -33,7 +34,9 @@ public class UserController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto updateUser(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long id) throws EmailAlreadyExists, EntityNotFoundException {
+    public UserDto updateUser(@Validated(Update.class)
+                              @RequestBody UserDto userDto,
+                              @PathVariable long id) throws EmailAlreadyExists, EntityNotFoundException {
         log.info("Запрос на обновление пользователя с ID {}", id);
         return userService.updateUser(userDto, id);
     }

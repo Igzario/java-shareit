@@ -11,11 +11,11 @@ import javax.validation.constraints.Pattern;
 public class ItemDto {
     private final Long id;
 
-    @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
+    @Pattern(regexp = ("(?i).*[a-zа-я\\d{10}].*"), groups = Update.class)
     @NotBlank(message = "Ошибка ввода - пустое поле Name", groups = Create.class)
     private final String name;
 
-    @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
+    @Pattern(regexp = ("(?i).*[a-zа-я\\d{10}].*"), groups = Update.class)
     @NotBlank(message = "Ошибка ввода - пустое поле Description", groups = Create.class)
     private final String description;
 

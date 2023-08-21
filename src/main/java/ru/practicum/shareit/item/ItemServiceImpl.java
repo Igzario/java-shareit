@@ -29,10 +29,10 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemServiceImpl implements ItemService {
-    final ItemRepository itemRepository;
-    final UserRepository userRepository;
-    final BookingRepository bookingRepository;
-    final CommentRepository commentRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -48,15 +48,7 @@ public class ItemServiceImpl implements ItemService {
                     comment, autor));
         });
         if (item.getOwner().equals(userID)) {
-            List<Booking> bookings = bookingRepository.findBookingByItemIdAndStatusIsNotAndEndDateAfter(itemId, Status.REJECTED, LocalDateTime.now().minusSeconds(5));
-            bookings.sort((o1, o2) -> {
-                if (o1.getStartDate().isBefore(o2.getStartDate())) {
-                    return -1;
-                } else if (o1.getStartDate().isAfter(o2.getStartDate())) {
-                    return 1;
-                }
-                return 0;
-            });
+            List<Booking> bookings = bookingRepository.findBookingByItemIdAndStatusIsNotAndEndDateAfterOrderByStartDate(itemId, Status.REJECTED, LocalDateTime.now().minusSeconds(5));
             if (bookings.isEmpty()) {
                 return ItemMapper.toItemDtoWithComments(item, lastBooking, nextBooking, commentDtoList);
             }
@@ -92,10 +84,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(ItemDto item, Long id, Long userId) throws EntityNotFoundException, UserNotHaveThisItemException {
         Item itemForUpdate = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Item.class, id));
         if (itemForUpdate.getOwner().equals(userId)) {
-            if (item.getName() != null) {
+            if (item.getName()!=null && !item.getName().isBlank()) {
                 itemForUpdate.setName(item.getName());
             }
-            if (item.getDescription() != null) {
+            if (item.getDescription()!=null && !item.getDescription().isBlank()) {
                 itemForUpdate.setDescription(item.getDescription());
             }
             if (item.getAvailable() != null) {
@@ -147,7 +139,7 @@ public class ItemServiceImpl implements ItemService {
         return itemsList;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) throws EntityNotFoundException, AddCommentException {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(User.class, userId));

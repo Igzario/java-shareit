@@ -1,4 +1,5 @@
 package ru.practicum.shareit.comment.mapper;
+
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.dto.CommentDto;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 @UtilityClass
 public class CommentMapper {
-    public static CommentDto toCommentDto(Comment comment, User autor) {
+    public CommentDto toCommentDto(Comment comment, User autor) {
         return new CommentDto(
                 comment.getId(),
                 comment.getText(),
@@ -18,7 +19,7 @@ public class CommentMapper {
         );
     }
 
-    public static Comment toComment(CommentDto commentDto, Item item, User author) {
+    public Comment toComment(CommentDto commentDto, Item item, User author) {
         Comment comment = new Comment();
         comment.setId(commentDto.getId());
         comment.setText(commentDto.getText());

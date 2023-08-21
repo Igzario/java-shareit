@@ -7,13 +7,18 @@ import ru.practicum.shareit.exception.*;
 import java.util.List;
 
 public interface BookingService {
-    BookingDto addBooking(BookingDtoFromRequest bookingDtoFromRequest, Long userId) throws EntityNotFoundException, ItemStatusUnAvailableException, TimeBookingException, UserIsOwnerItemException;
+    BookingDto addBooking(BookingDtoFromRequest bookingDtoFromRequest, Long userId)
+            throws EntityNotFoundException, ItemStatusUnAvailableException, TimeBookingException, UserIsOwnerItemException;
 
-    BookingDto approveBooking(Long userId, Long bookingId, Boolean approved) throws EntityNotFoundException, UserNotHaveThisItemException, BookingAlwaysApprovedException;
+    BookingDto approveBooking(Long userId, Long bookingId, Boolean approved)
+            throws EntityNotFoundException, UserNotHaveThisItemException, BookingAlwaysApprovedException;
 
-    BookingDto getBooking(Long userId, Long bookingId) throws EntityNotFoundException, UserNotHaveThisItemException, BookingUserException;
+    BookingDto getBooking(Long userId, Long bookingId)
+            throws EntityNotFoundException, UserNotHaveThisItemException, BookingUserException;
 
-    List<BookingDto> getAllBookingsForUser(Long userId, String state) throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException;
+    List<BookingDto> getAllBookingsForUser(Long userId, String state)
+            throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException;
 
-    List<BookingDto> getAllBookingItemsForUser(Long userId, String state) throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException;
+    List<BookingDto> getAllBookingItemsForUser(Long userId, String state)
+            throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException;
 }

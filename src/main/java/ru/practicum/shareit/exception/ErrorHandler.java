@@ -1,6 +1,7 @@
 package ru.practicum.shareit.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,23 +13,16 @@ import java.util.Map;
 @ControllerAdvice(("ru.practicum.shareit"))
 public class ErrorHandler {
 
+    public ResponseEntity<String> constraint(ConstraintViolationException ex) {
+        log.info(ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler
     public ResponseEntity emailAlreadyExists(final EmailAlreadyExists exception) {
         log.error(HttpStatus.valueOf(409) + " " + exception.getMessage());
         return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(409));
     }
-
-//    @ExceptionHandler
-//    public ResponseEntity userWithIdNotFound(final UserWithIdNotFound exception) {
-//        log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
-//        return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
-//    }
-//
-//    @ExceptionHandler
-//    public ResponseEntity itemNotFound(final ItemNotFound exception) {
-//        log.error(HttpStatus.valueOf(404) + " " + exception.getMessage());
-//        return new ResponseEntity<>(Map.of("Error: ", exception.getMessage()), HttpStatus.valueOf(404));
-//    }
 
     @ExceptionHandler
     public ResponseEntity userNotHaveThisItem(final UserNotHaveThisItemException exception) {

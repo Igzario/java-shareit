@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.dto;
+
 import lombok.Data;
+
 import javax.persistence.Id;
 
 @Data

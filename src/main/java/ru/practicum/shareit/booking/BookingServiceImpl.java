@@ -26,19 +26,22 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BookingServiceImpl implements BookingService {
-    final ItemRepository itemRepository;
-    final UserRepository userRepository;
-    final BookingRepository bookingRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     @Transactional
     @Override
-    public BookingDto addBooking(BookingDtoFromRequest bookingDtoFromRequest, Long userId) throws EntityNotFoundException, ItemStatusUnAvailableException, TimeBookingException, UserIsOwnerItemException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
-        Item item = itemRepository.findById(bookingDtoFromRequest.getItemId()).orElseThrow(() -> new EntityNotFoundException(Item.class, bookingDtoFromRequest.getItemId()));
-        if (validTime(bookingDtoFromRequest.getStart(), bookingDtoFromRequest.getEnd())) {
-            log.info("Сгенерирован TimeBookingException");
-            throw new TimeBookingException();
-        }
+    public BookingDto addBooking(BookingDtoFromRequest bookingDtoFromRequest, Long userId)
+            throws EntityNotFoundException, ItemStatusUnAvailableException, TimeBookingException, UserIsOwnerItemException {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - User");
+            return new EntityNotFoundException(User.class, userId);
+        });
+        Item item = itemRepository.findById(bookingDtoFromRequest.getItemId()).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - Item");
+            return new EntityNotFoundException(Item.class, bookingDtoFromRequest.getItemId());
+        });
         if (item.getOwner().equals(userId)) {
             log.info("Сгенерирован UserIsOwnerItemException");
             throw new UserIsOwnerItemException(userId, item.getId());
@@ -60,10 +63,20 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingDto approveBooking(Long userId, Long bookingId, Boolean approved) throws EntityNotFoundException, UserNotHaveThisItemException, BookingAlwaysApprovedException {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new EntityNotFoundException(Booking.class, userId));
-        User user = userRepository.findById(booking.getBookerId()).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
-        Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() -> new UserNotHaveThisItemException(userId, booking.getItemId()));
+    public BookingDto approveBooking(Long userId, Long bookingId, Boolean approved)
+            throws EntityNotFoundException, UserNotHaveThisItemException, BookingAlwaysApprovedException {
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - Booking");
+            return new EntityNotFoundException(Booking.class, userId);
+        });
+        User user = userRepository.findById(booking.getBookerId()).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - User");
+            return new EntityNotFoundException(User.class, userId);
+        });
+        Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - Item");
+            return new UserNotHaveThisItemException(userId, booking.getItemId());
+        });
         if (item.getOwner().equals(userId)) {
             if (approved) {
                 if (booking.getStatus() != Status.APPROVED) {
@@ -85,10 +98,20 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public BookingDto getBooking(Long userId, Long bookingId) throws EntityNotFoundException, UserNotHaveThisItemException, BookingUserException {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new EntityNotFoundException(Booking.class, userId));
-        User user = userRepository.findById(booking.getBookerId()).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
-        Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() -> new UserNotHaveThisItemException(userId, booking.getItemId()));
+    public BookingDto getBooking(Long userId, Long bookingId)
+            throws EntityNotFoundException, UserNotHaveThisItemException, BookingUserException {
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - Booking");
+            return new EntityNotFoundException(Booking.class, userId);
+        });
+        User user = userRepository.findById(booking.getBookerId()).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - User");
+            return new EntityNotFoundException(User.class, userId);
+        });
+        Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - Item");
+            return new UserNotHaveThisItemException(userId, booking.getItemId());
+        });
         if (userId.equals(item.getOwner()) || userId.equals(booking.getBookerId())) {
             log.info("Возвращено бронирование: {}", booking);
             return BookingMapper.toBookingDto(booking, UserMapper.toUserDto(user), ItemMapper.toItemDto(item));
@@ -100,24 +123,35 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> getAllBookingsForUser(Long userId, String state) throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
+    public List<BookingDto> getAllBookingsForUser(Long userId, String state)
+            throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - User");
+            return new EntityNotFoundException(User.class, userId);
+        });
         List<Booking> bookingList = new ArrayList<>();
-        if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.ALL))) {
-            bookingList = bookingRepository.findBookingsByBookerIdOrderByStartDateDesc(userId);
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.FUTURE))) {
-            bookingList = bookingRepository.findBookingsByBookerIdAndStartDateAfterOrderByStartDateDesc(userId, LocalDateTime.now().minusSeconds(5));
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.WAITING))) {
-            bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, Status.WAITING);
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.REJECTED))) {
-            bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, Status.REJECTED);
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.CURRENT))) {
-            bookingList = bookingRepository.findBookingsByBookerIdAndStartDateBeforeAndEndDateAfter(userId, LocalDateTime.now(), LocalDateTime.now());
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.PAST))) {
-            bookingList = bookingRepository.findBookingsByBookerIdAndEndDateBeforeOrderByStartDateDesc(userId, LocalDateTime.now());
-        } else {
-            log.info("Сгенерирован UnsupportedStatusException");
-            throw new UnsupportedStatusException();
+        switch (state) {
+            case ("ALL"):
+                bookingList = bookingRepository.findBookingsByBookerIdOrderByStartDateDesc(userId);
+                break;
+            case ("FUTURE"):
+                bookingList = bookingRepository.findBookingsByBookerIdAndStartDateAfterOrderByStartDateDesc(userId, LocalDateTime.now().minusSeconds(5));
+                break;
+            case ("WAITING"):
+                bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, Status.WAITING);
+                break;
+            case ("REJECTED"):
+                bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, Status.REJECTED);
+                break;
+            case ("CURRENT"):
+                bookingList = bookingRepository.findBookingsByBookerIdAndStartDateBeforeAndEndDateAfter(userId, LocalDateTime.now(), LocalDateTime.now());
+                break;
+            case ("PAST"):
+                bookingList = bookingRepository.findBookingsByBookerIdAndEndDateBeforeOrderByStartDateDesc(userId, LocalDateTime.now());
+                break;
+            default:
+                log.info("Сгенерирован UnsupportedStatusException");
+                throw new UnsupportedStatusException();
         }
         ArrayList<BookingDto> bookingDtoList = new ArrayList<>();
         User userForConvert;
@@ -133,25 +167,36 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> getAllBookingItemsForUser(Long userId, String state) throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
+    public List<BookingDto> getAllBookingItemsForUser(Long userId, String state)
+            throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - User");
+            return new EntityNotFoundException(User.class, userId);
+        });
         List<Long> bookings = new ArrayList<>();
         List<BookingDto> bookingDtoList = new ArrayList<>();
-        if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.ALL))) {
-            bookings = bookingRepository.getAllBookingItemsForUser(userId);
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.FUTURE))) {
-            bookings = bookingRepository.getAllBookingItemsForUserFuture(userId, LocalDateTime.now().minusSeconds(4));
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.WAITING))) {
-            bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, Status.WAITING);
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.REJECTED))) {
-            bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, Status.REJECTED);
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.CURRENT))) {
-            bookings = bookingRepository.findBookingsCurrent(userId, LocalDateTime.now());
-        } else if (state.equalsIgnoreCase(String.valueOf(StatusFromRequest.PAST))) {
-            bookings = bookingRepository.findBookingsPast(userId, LocalDateTime.now());
-        } else {
-            log.info("Сгенерирован UnsupportedStatusException");
-            throw new UnsupportedStatusException();
+        switch (state) {
+            case ("ALL"):
+                bookings = bookingRepository.getAllBookingItemsForUser(userId);
+                break;
+            case ("FUTURE"):
+                bookings = bookingRepository.getAllBookingItemsForUserFuture(userId, LocalDateTime.now().minusSeconds(4));
+                break;
+            case ("WAITING"):
+                bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, Status.WAITING);
+                break;
+            case ("REJECTED"):
+                bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, Status.REJECTED);
+                break;
+            case ("CURRENT"):
+                bookings = bookingRepository.findBookingsCurrent(userId, LocalDateTime.now());
+                break;
+            case ("PAST"):
+                bookings = bookingRepository.findBookingsPast(userId, LocalDateTime.now());
+                break;
+            default:
+                log.info("Сгенерирован UnsupportedStatusException");
+                throw new UnsupportedStatusException();
         }
         for (Long id : bookings) {
             Booking booking = bookingRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Booking.class, userId));
@@ -163,10 +208,10 @@ public class BookingServiceImpl implements BookingService {
         return bookingDtoList;
     }
 
-    public Boolean validTime(LocalDateTime start, LocalDateTime end) {
-        if (start.isAfter(end) || start.equals(end) || start.isBefore(LocalDateTime.now())) {
-            return true;
-        }
-        return false;
-    }
+//    public Boolean validTime(LocalDateTime start, LocalDateTime end) {
+//        if (start.equals(end)) {
+//            return true;
+//        }
+//        return false;
+//    }
 }
