@@ -18,11 +18,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Page<Booking> findBookingsByBookerId(Long bookerId, Pageable pageable);
 
-
-
-
-
-
     List<Booking> findBookingsByBookerIdAndStartDateBeforeAndEndDateAfter(Long userId, LocalDateTime start, LocalDateTime end);
 
     List<Booking> findBookingsByBookerIdAndEndDateBeforeOrderByStartDateDesc(Long userId, LocalDateTime end);
@@ -36,11 +31,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "select b.id, b.startDate from Booking b join Item i on i.id=b.itemId where i.owner = ?1 and b.status=?2 order by b.startDate desc")
     List<Long> getAllBookingItemsForUserStatus(Long owner, Status status);
 
-
     @Query(value = "select b.id from Booking b join Item i on i.id=b.itemId where i.owner = ?1 order by b.startDate desc")
     Page<Long> getAllBookingItemsForUserId(Long owner, Pageable pageable);
-
-
 
     @Query(value = "select b.id from Booking b where b.bookerId=?1 and b.itemId=?2 and b.endDate<?3 and b.status=?4 order by b.id")
     List<Long> findBookingsToAddComment(Long bookerId, Long itemId, LocalDateTime localDateTime, Status status);

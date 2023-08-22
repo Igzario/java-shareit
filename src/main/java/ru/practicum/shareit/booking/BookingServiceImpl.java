@@ -161,7 +161,7 @@ public class BookingServiceImpl implements BookingService {
         Item itemForConvert;
         if (size != null && from != null) {
             Pageable pageable = PageRequest.of(from, size, Sort.by("startDate"));
-            bookingList = bookingRepository.findBookingsByBookerId(userId , pageable).getContent();
+            bookingList = bookingRepository.findBookingsByBookerId(userId, pageable).getContent();
         }
         for (Booking booking : bookingList) {
             userForConvert = userRepository.findById(booking.getBookerId()).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
@@ -206,7 +206,7 @@ public class BookingServiceImpl implements BookingService {
                 throw new UnsupportedStatusException();
         }
         if (size != null && from != null) {
-            bookings = bookingRepository.getAllBookingItemsForUserId(userId , PageRequest.of(from, size)).getContent();
+            bookings = bookingRepository.getAllBookingItemsForUserId(userId, PageRequest.of(from, size)).getContent();
         }
         for (Long id : bookings) {
             Booking booking = bookingRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Booking.class, userId));

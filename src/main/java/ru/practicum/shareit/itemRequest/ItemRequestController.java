@@ -8,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.itemRequest.dto.ItemRequestDto;
-import ru.practicum.shareit.itemRequest.model.ItemRequest;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -49,7 +48,7 @@ public class ItemRequestController {
         return itemRequestService.getItemRequest(requestId, userId);
     }
 
-    @GetMapping( "/all")
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemRequestDto> getAllRequests(
             @RequestHeader(value = header) Long userId, @RequestParam(value = "from", required = false) @PositiveOrZero Integer from,
