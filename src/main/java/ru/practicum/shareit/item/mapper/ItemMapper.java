@@ -1,10 +1,12 @@
 package ru.practicum.shareit.item.mapper;
+
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDtoForItemOwner;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForOwner;
 import ru.practicum.shareit.item.dto.ItemDtoWithComments;
+import ru.practicum.shareit.item.dto.ItemDtoWithRequests;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class ItemMapper {
         newItem.setName(itemDto.getName());
         newItem.setDescription(itemDto.getDescription());
         newItem.setAvailable(itemDto.getAvailable());
+        newItem.setRequest(itemDto.getRequestId());
         return newItem;
     }
 
@@ -48,8 +51,7 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.isAvailable(),
-                item.getRequest() != null ? item.getRequest() : null
+                item.isAvailable()
         );
         itemDtoWithComments.setNextBooking(nextBooking);
         itemDtoWithComments.setLastBooking(lastBooking);

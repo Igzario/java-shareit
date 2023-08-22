@@ -16,9 +16,9 @@ public interface BookingService {
     BookingDto getBooking(Long userId, Long bookingId)
             throws EntityNotFoundException, UserNotHaveThisItemException, BookingUserException;
 
-    List<BookingDto> getAllBookingsForUser(Long userId, String state)
+    List<BookingDto> getAllBookingsForUser(Long userId, String state, Integer from, Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException;
 
-    List<BookingDto> getAllBookingItemsForUser(Long userId, String state)
+    List<BookingDto> getAllBookingItemsForUser(Long userId, String state, Integer from, Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException;
 }

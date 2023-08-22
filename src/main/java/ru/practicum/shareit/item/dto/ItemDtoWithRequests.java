@@ -1,18 +1,15 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.Data;
-import ru.practicum.shareit.booking.dto.BookingDtoForItemOwner;
-import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.validated.Create;
 import ru.practicum.shareit.validated.Update;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
 
 @Data
-public class ItemDtoWithComments {
+
+public class ItemDtoWithRequests {
     private final Long id;
 
     @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
@@ -25,7 +22,5 @@ public class ItemDtoWithComments {
 
     @NotNull(message = "Ошибка ввода - Available: null", groups = Create.class)
     private final Boolean available;
-    private BookingDtoForItemOwner lastBooking;
-    private BookingDtoForItemOwner nextBooking;
-    private ArrayList<CommentDto> comments;
+    private final Long requestId;
 }

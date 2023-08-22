@@ -3,6 +3,9 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -13,6 +16,7 @@ import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.itemRequest.model.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -122,7 +126,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> getAllBookingsForUser(Long userId, String state)
+    public List<BookingDto> getAllBookingsForUser(Long userId, String state, Integer from, Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             log.info("Сгенерирован EntityNotFoundException - User");
@@ -155,6 +159,10 @@ public class BookingServiceImpl implements BookingService {
         ArrayList<BookingDto> bookingDtoList = new ArrayList<>();
         User userForConvert;
         Item itemForConvert;
+        if (size != null && from != null) {
+            Pageable pageable = PageRequest.of(from, size, Sort.by("startDate"));
+            bookingList = bookingRepository.findBookingsByBookerId(userId , pageable).getContent();
+        }
         for (Booking booking : bookingList) {
             userForConvert = userRepository.findById(booking.getBookerId()).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
             itemForConvert = itemRepository.findById(booking.getItemId()).orElseThrow(() -> new UserNotHaveThisItemException(userId, booking.getItemId()));
@@ -166,7 +174,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> getAllBookingItemsForUser(Long userId, String state)
+    public List<BookingDto> getAllBookingItemsForUser(Long userId, String state, Integer from, Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             log.info("Сгенерирован EntityNotFoundException - User");
@@ -196,6 +204,9 @@ public class BookingServiceImpl implements BookingService {
             default:
                 log.info("Сгенерирован UnsupportedStatusException");
                 throw new UnsupportedStatusException();
+        }
+        if (size != null && from != null) {
+            bookings = bookingRepository.getAllBookingItemsForUserId(userId , PageRequest.of(from, size)).getContent();
         }
         for (Long id : bookings) {
             Booking booking = bookingRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Booking.class, userId));

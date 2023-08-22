@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.index.qual.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoFromRequest;
 import ru.practicum.shareit.exception.*;
 
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -52,19 +54,23 @@ public class BookingController {
     @ResponseStatus(HttpStatus.OK)
     public List<BookingDto> getAllBookingsForUser(
             @RequestHeader(value = header) Long userId,
-            @RequestParam(value = "state", defaultValue = "ALL") String state)
+            @RequestParam(value = "state", defaultValue = "ALL") String state,
+            @RequestParam(value = "from", required = false) @PositiveOrZero Integer from,
+            @RequestParam(value = "size", required = false) @Positive Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
         log.info("Запрос на вывод всех Бронирований от пользователя с ID {}", userId);
-        return bookingService.getAllBookingsForUser(userId, state);
+        return bookingService.getAllBookingsForUser(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
     public List<BookingDto> getAllBookingsForUserOwner(
             @RequestHeader(value = header) Long userId,
-            @RequestParam(value = "state", defaultValue = "ALL") String state)
+            @RequestParam(value = "state", defaultValue = "ALL") String state,
+            @RequestParam(value = "from", required = false) @PositiveOrZero Integer from,
+            @RequestParam(value = "size", required = false) @Positive Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
         log.info("Запрос на вывод всех Бронирований от пользователя с ID {}", userId);
-        return bookingService.getAllBookingItemsForUser(userId, state);
+        return bookingService.getAllBookingItemsForUser(userId, state, from, size);
     }
 }
