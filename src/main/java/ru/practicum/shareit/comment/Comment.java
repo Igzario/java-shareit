@@ -2,11 +2,8 @@ package ru.practicum.shareit.comment;
 
 import lombok.Data;
 import ru.practicum.shareit.validated.Create;
-import ru.practicum.shareit.validated.Update;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 @Data
