@@ -6,7 +6,6 @@ import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForOwner;
 import ru.practicum.shareit.item.dto.ItemDtoWithComments;
-import ru.practicum.shareit.item.dto.ItemDtoWithRequests;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
