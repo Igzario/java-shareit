@@ -19,11 +19,12 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
+    private final String HEADER = "X-Sharer-User-Id";
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto addNewUser(@Validated(Create.class) @RequestBody ItemDto itemDto,
-                              @RequestHeader(value = "X-Sharer-User-Id") Long userId) throws EntityNotFoundException {
+                              @RequestHeader(value = HEADER) Long userId) throws EntityNotFoundException {
         log.info("Запрос на добавление Item {} с userId {}", itemDto, userId);
         return itemService.addNewItem(itemDto, userId);
     }
@@ -31,7 +32,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public ItemDto updateItem(@Validated(Update.class) @RequestBody ItemDto itemDto, @PathVariable long itemId,
-                              @RequestHeader(value = "X-Sharer-User-Id") Long userId)
+                              @RequestHeader(value = HEADER) Long userId)
             throws UserNotHaveThisItemException, EntityNotFoundException {
         log.info("Запрос на обновление Item с ID {}", itemId);
         return itemService.updateItem(itemDto, itemId, userId);
@@ -40,7 +41,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public Object getItem(@PathVariable long itemId,
-                          @RequestHeader(value = "X-Sharer-User-Id") Long userId) throws EntityNotFoundException {
+                          @RequestHeader(value = HEADER) Long userId) throws EntityNotFoundException {
         log.info("Запрос на вывод Item с ID {} от пользователя с ID {}", itemId, userId);
         return itemService.getItemDto(itemId, userId);
     }
@@ -54,14 +55,14 @@ public class ItemController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDtoForOwner> getItemsByUser(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+    public List<ItemDtoForOwner> getItemsByUser(@RequestHeader(value = HEADER) Long userId) {
         log.info("Запрос на вывод Items пользователя с ID {}", userId);
         return itemService.getItemsByUser(userId);
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> searchItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+    public List<ItemDto> searchItem(@RequestHeader(value = HEADER) Long userId,
                                     @RequestParam("text") String search) {
         log.info("Запрос на поиск Item по тексту: {}", search);
         return itemService.searchItem(userId, search);
@@ -70,7 +71,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     @ResponseStatus(HttpStatus.OK)
-    public CommentDto addComment(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+    public CommentDto addComment(@RequestHeader(value = HEADER) Long userId,
                                  @Validated(Create.class) @RequestBody CommentDto commentDto,
                                  @PathVariable Long itemId) throws EntityNotFoundException, AddCommentException {
         log.info("Запрос на добавление комментария к Item с ID {} от пользователя с ID {}", itemId, userId);

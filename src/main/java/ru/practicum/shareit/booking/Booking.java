@@ -7,9 +7,10 @@ import ru.practicum.shareit.booking.enums.Status;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+
 @Entity
 @Table(name = "bookings", schema = "public")
+@Data
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +27,6 @@ public class Booking {
     private Long bookerId;
     @Column(name = "item_id")
     private Long itemId;
-
-    public Booking(@NonNull LocalDateTime startDate, @NonNull LocalDateTime endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
 
     public Booking() {
     }

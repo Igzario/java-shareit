@@ -16,9 +16,10 @@ public class Item {
     @Pattern(regexp = ("(?i).*[a-zа-я\\d{10}].*"))
     @NotBlank(message = "Ошибка ввода - пустое поле Name")
     private String name;
+    @Pattern(regexp = ("(?i).*[a-zа-я].*"))
+    @NotBlank(message = "Ошибка ввода - пустое поле Description")
     private String description;
     @NotNull(message = "Ошибка ввода - Available: null")
-
     private Boolean available;
     @Column(name = "owner_id")
     private Long owner;

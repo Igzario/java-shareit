@@ -22,7 +22,10 @@ public class BookingMapper {
     }
 
     public Booking toDtoBooking(BookingDtoFromRequest bookingDtoFromRequest) {
-        return new Booking(bookingDtoFromRequest.getStart(), bookingDtoFromRequest.getEnd());
+        Booking booking = new Booking();
+        booking.setStartDate(bookingDtoFromRequest.getStart());
+        booking.setEndDate(bookingDtoFromRequest.getEnd());
+        return booking;
     }
 
     public BookingDtoForItemOwner bookingDtoForItemOwner(Booking booking) {

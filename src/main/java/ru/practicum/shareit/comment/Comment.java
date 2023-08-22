@@ -16,7 +16,6 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Pattern(regexp = ("(?i).*[a-zа-я\\d{10}].*"), groups = Update.class)
     @NotBlank(message = "Ошибка ввода - пустое поле text", groups = Create.class)
     private String text;
     @Column(name = "item_id")

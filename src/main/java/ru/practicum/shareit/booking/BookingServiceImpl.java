@@ -206,11 +206,4 @@ public class BookingServiceImpl implements BookingService {
         log.info("Возвращен список бронирований: {}", bookingDtoList);
         return bookingDtoList;
     }
-
-//    public Boolean validTime(LocalDateTime start, LocalDateTime end) {
-//        if (start.equals(end)) {
-//            return true;
-//        }
-//        return false;
-//    }
 }
