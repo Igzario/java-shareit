@@ -28,7 +28,6 @@ import java.util.List;
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final BookingRepository bookingRepository;
     private final ItemRequestRepository itemRequestRepository;
 
     @Override

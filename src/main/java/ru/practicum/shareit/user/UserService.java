@@ -5,7 +5,7 @@ import ru.practicum.shareit.exception.*;
 
 import java.util.List;
 
-interface UserService {
+public interface UserService {
     List<UserDto> getAllUsers();
 
     UserDto findUserDtoById(Long id) throws EntityNotFoundException;
