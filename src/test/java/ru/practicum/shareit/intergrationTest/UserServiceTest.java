@@ -33,6 +33,8 @@ public class UserServiceTest {
         userDto.setName("Max");
         userDto.setEmail("qwe@qwe.com");
         user = userService.addNewUser(userDto);
+
+
     }
 
     @Test

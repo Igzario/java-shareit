@@ -51,7 +51,13 @@ public class BookingServiceTest {
         userDtoBooker.setEmail("unique@qwe.com");
         userDtoBooker1 = userService.addNewUser(userDtoBooker);
 
-        ItemDto itemDtoCreate = new ItemDto(null, "Mr. Booker", "Description", true, null);
+        ItemDto itemDtoCreate = new ItemDto();
+        itemDtoCreate.setId(null);
+        itemDtoCreate.setName("Mr. Booker");
+        itemDtoCreate.setDescription("Description");
+        itemDtoCreate.setAvailable(true);
+        itemDtoCreate.setRequestId(null);
+
         ItemDto itemDto1 = itemService.addNewItem(itemDtoCreate, userDto1.getId());
         bookingDto = new BookingDtoFromRequest(itemDto1.getId(), LocalDateTime.now().plusDays(1), LocalDateTime.MAX);
     }

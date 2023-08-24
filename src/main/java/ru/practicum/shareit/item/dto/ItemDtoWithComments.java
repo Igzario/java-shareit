@@ -13,18 +13,18 @@ import java.util.ArrayList;
 
 @Data
 public class ItemDtoWithComments {
-    private final Long id;
+    private Long id;
 
     @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
     @NotBlank(message = "Ошибка ввода - пустое поле Name", groups = Create.class)
-    private final String name;
+    private String name;
 
     @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
     @NotBlank(message = "Ошибка ввода - пустое поле Description", groups = Create.class)
-    private final String description;
+    private String description;
 
     @NotNull(message = "Ошибка ввода - Available: null", groups = Create.class)
-    private final Boolean available;
+    private Boolean available;
     private BookingDtoForItemOwner lastBooking;
     private BookingDtoForItemOwner nextBooking;
     private ArrayList<CommentDto> comments;

@@ -7,6 +7,6 @@ import javax.persistence.Id;
 @Data
 public class BookingDtoForItemOwner {
     @Id
-    private final Long id;
-    private final Long bookerId;
+    private Long id;
+    private Long bookerId;
 }

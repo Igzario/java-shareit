@@ -1,6 +1,7 @@
 package ru.practicum.shareit.intergrationTest;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForOwner;
 import ru.practicum.shareit.user.UserServiceImpl;
 import ru.practicum.shareit.user.dto.UserDto;
-
 import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
 
 @Transactional
@@ -35,49 +33,78 @@ public class ItemServiceTest {
     private ItemDto itemDto;
     private UserDto userDto1;
     private ItemDto itemDto1;
+    private ItemDto itemDtoCheck;
 
     @BeforeEach
     public void init() throws EmailAlreadyExists, EntityNotFoundException {
         userDto.setName("Max");
         userDto.setEmail("qwe@qwe.com");
-        itemDto = new ItemDto(1L, "ItemName", "Description", true, 2L);
+
+        itemDto = new ItemDto();
+        itemDto.setId(1L);
+        itemDto.setName("ItemName");
+        itemDto.setDescription("Description");
+        itemDto.setAvailable(true);
+        itemDto.setRequestId(2L);
+
+        itemDtoCheck = new ItemDto();
+        itemDtoCheck.setId(null);
+        itemDtoCheck.setName("newName");
+        itemDtoCheck.setDescription("Desc");
+        itemDtoCheck.setRequestId(null);
+        itemDtoCheck.setAvailable(true);
+
         userDto1 = userService.addNewUser(userDto);
         itemDto1 = itemService.addNewItem(itemDto, userDto1.getId());
     }
 
     @Test
     public void createItemTest() {
-        test(itemDto);
-        assertThat(itemDto.getName(), equalTo(itemDto.getName()));
+        assertThat(itemDto1, equalTo(itemDto));
+        try {
+            itemService.addNewItem(itemDto, 99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 
     @Test
     public void patchItemTest() throws EntityNotFoundException, UserNotHaveThisItemException {
-        ItemDto itemDtoCheck = new ItemDto(null, "newName", null, null, null);
         ItemDto itemDto1 = itemService.updateItem(itemDtoCheck, itemDto.getId(), userDto1.getId());
-        test(itemDto1);
-        assertThat(itemDto1.getName(), equalTo(itemDtoCheck.getName()));
+        assertThat(itemDtoCheck, equalTo(itemDto1));
+        try {
+            itemService.updateItem(itemDtoCheck, 99L, userDto1.getId());
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
+        try {
+            itemService.updateItem(itemDtoCheck, itemDto.getId(), 99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), UserNotHaveThisItemException.class);
+        }
     }
 
     @Test
     public void findByUserTest() throws EntityNotFoundException {
-        ItemDto itemDtoCheck = new ItemDto(null, "ItemName2", "Description2", true, null);
         itemService.addNewItem(itemDtoCheck, userDto1.getId());
         List<ItemDtoForOwner> items = itemService.getItemsByUser(userDto1.getId());
         assertThat(items.size(), equalTo(2));
+        try {
+            items = itemService.getItemsByUser(99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 
     @Test
     public void searchItem() throws EntityNotFoundException {
-        ItemDto itemDtoCheck = new ItemDto(null, "Desc", "Text", true, null);
         itemService.addNewItem(itemDtoCheck, userDto1.getId());
         List<ItemDto> items = itemService.searchItem(0L, "es");
-        assertThat(items.size(), equalTo(1));
-    }
-
-    private void test(ItemDto itemDto) {
-        assertThat(itemDto.getId(), notNullValue());
-        assertThat(itemDto.getDescription(), equalTo(itemDto.getDescription()));
-        assertThat(itemDto.getAvailable(), equalTo(itemDto.getAvailable()));
+        assertThat(items.size(), equalTo(2));
+        try {
+            items = itemService.searchItem(0L, "s");
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 }

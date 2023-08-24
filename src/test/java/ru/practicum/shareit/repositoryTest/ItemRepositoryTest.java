@@ -29,7 +29,12 @@ public class ItemRepositoryTest {
         userDto.setId(1L);
         userDto.setName("Max");
         userDto.setEmail("qwe@qwe.com");
-        ItemDto itemDto = new ItemDto(null, "ItemName", "Description", true, null);
+        ItemDto itemDto = new ItemDto();
+        itemDto.setId(null);
+        itemDto.setName("ItemName");
+        itemDto.setDescription("Description");
+        itemDto.setAvailable(true);
+        itemDto.setRequestId(null);
 
         em1.createNativeQuery("INSERT INTO USERS (NAME, EMAIL)" +
                         "VALUES (?,?)")

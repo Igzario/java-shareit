@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -29,6 +30,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final UserRepository userRepository;
     private final ItemRequestRepository itemRequestRepository;
 
+    @Transactional
     @Override
     public ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto, Long userId) throws EntityNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -36,15 +38,13 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             return new EntityNotFoundException(User.class, userId);
         });
 
-        ItemRequest itemRequest = ItemRequestMapper.itemRequest(itemRequestDto);
-        itemRequest.setRequestorId(userId);
-        itemRequest.setCreated(LocalDateTime.now());
-
+        ItemRequest itemRequest = ItemRequestMapper.itemRequest(itemRequestDto, userId, LocalDateTime.now());
         itemRequestRepository.save(itemRequest);
         return ItemRequestMapper.toItemRequestDto(itemRequest);
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ItemRequestDto> getRequests(Long userId) throws EntityNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -55,6 +55,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return createRequestsDtoList(requests);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ItemRequestDto getItemRequest(Long requestId, Long userId) throws EntityNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -73,6 +74,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return itemRequestDto;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ItemRequestDto> getItemRequests(Long userId, Integer from, Integer size) throws EntityNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -82,7 +84,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (size == null || from == null) {
             return new ArrayList<>();
         }
-        List<ItemRequest> requests = itemRequestRepository.findByRequestorIdIsNot(userId, PageRequest.of(from, size, Sort.by("created"))).getContent();
+        List<ItemRequest> requests =
+                itemRequestRepository.findByRequestorIdIsNot(
+                        userId, PageRequest.of(from, size, Sort.by("created"))).getContent();
         return createRequestsDtoList(requests);
     }
 

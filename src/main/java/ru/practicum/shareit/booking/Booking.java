@@ -1,13 +1,14 @@
 package ru.practicum.shareit.booking;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import ru.practicum.shareit.booking.enums.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
+@NoArgsConstructor
 @Entity
 @Table(name = "bookings", schema = "public")
 @Data
@@ -27,7 +28,4 @@ public class Booking {
     private Long bookerId;
     @Column(name = "item_id")
     private Long itemId;
-
-    public Booking() {
-    }
 }

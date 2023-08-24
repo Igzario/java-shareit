@@ -47,7 +47,12 @@ public class RequestServiceTest {
         userDto.setEmail("qwe@qwe.com");
 
         userDto1 = userService.addNewUser(userDto);
-        ItemDto itemDtoCreate = new ItemDto(null, "Mr. Booker", "Description", true, null);
+        ItemDto itemDtoCreate = new ItemDto();
+        itemDtoCreate.setId(null);
+        itemDtoCreate.setName("Mr. Booker");
+        itemDtoCreate.setDescription("Description");
+        itemDtoCreate.setAvailable(true);
+        itemDtoCreate.setRequestId(null);
 
         UserDto userDtoOwner = new UserDto();
         userDtoOwner.setName("Owner");
