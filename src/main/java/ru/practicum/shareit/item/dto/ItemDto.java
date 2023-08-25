@@ -23,15 +23,4 @@ public class ItemDto {
     private Boolean available;
 
     private Long requestId;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ItemDto itemDto = (ItemDto) o;
-
-        if (name != null ? !name.equals(itemDto.name) : itemDto.name != null) return false;
-        return description != null ? description.equals(itemDto.description) : itemDto.description == null;
-    }
 }

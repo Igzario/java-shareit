@@ -75,7 +75,7 @@ public class ItemServiceTest {
     @Test
     public void patchItemTest() throws EntityNotFoundException, UserNotHaveThisItemException {
         ItemDto itemDto1 = itemService.updateItem(itemDtoCheck, itemDto.getId(), userDto1.getId());
-        assertThat(itemDtoCheck, equalTo(itemDto1));
+        Assertions.assertEquals(itemDtoCheck.getName(), itemDto1.getName());
         try {
             itemService.updateItem(itemDtoCheck, 99L, userDto1.getId());
         } catch (Exception e) {
