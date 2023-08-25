@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -27,6 +29,8 @@ import static org.hamcrest.Matchers.equalTo;
         properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 public class BookingServiceTest {
     @Autowired
     private ItemService itemService;
@@ -61,7 +65,6 @@ public class BookingServiceTest {
         itemDtoCreate.setDescription("Description");
         itemDtoCreate.setAvailable(true);
         itemDtoCreate.setRequestId(null);
-
 
         ItemDto itemDto1 = itemService.addNewItem(itemDtoCreate, userDto1.getId());
         bookingDto = new BookingDtoFromRequest(itemDto1.getId(), LocalDateTime.now().plusDays(1), LocalDateTime.MAX);
@@ -111,14 +114,14 @@ public class BookingServiceTest {
         try {
             booking = bookingService.approveBooking(2L, bookingDtoResponse.getId(), true);
         } catch (Exception e) {
-            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+            Assertions.assertEquals(e.getClass(), UserNotHaveThisItemException.class);
         }
         try {
             itemDtoCreate.setAvailable(false);
             itemService.updateItem(itemDtoCreate, 1L, userDto1.getId());
             booking = bookingService.approveBooking(userDto1.getId(), bookingDtoResponse.getId(), true);
         } catch (Exception e) {
-            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+            Assertions.assertEquals(e.getClass(), ItemStatusUnAvailableException.class);
         }
     }
 
