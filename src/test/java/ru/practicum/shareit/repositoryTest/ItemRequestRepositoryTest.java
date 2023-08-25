@@ -23,7 +23,7 @@ import java.util.List;
 public class ItemRequestRepositoryTest {
     @Autowired
     private TestEntityManager em;
-    @Mock
+    @Autowired
     private ItemRequestRepository itemRequestRepository;
     Item item;
     Item item2;
