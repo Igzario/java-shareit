@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class CommentDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
     @Pattern(regexp = ("(?i).*[a-zа-я].*"), groups = Update.class)
     @NotBlank(message = "Ошибка ввода - пустое поле text", groups = Create.class)
-    private final String text;
-    private final String authorName;
-    private final LocalDateTime created;
+    private String text;
+    private String authorName;
+    private LocalDateTime created;
 }

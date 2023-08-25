@@ -1,4 +1,5 @@
 package ru.practicum.shareit.booking;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.index.qual.Positive;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoFromRequest;
 import ru.practicum.shareit.exception.*;
+
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class BookingController {
     private final String header = "X-Sharer-User-Id";
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public BookingDto addBooking(
             @Validated @RequestBody BookingDtoFromRequest bookingDtoFromRequest,
             @RequestHeader(value = header) Long userId)

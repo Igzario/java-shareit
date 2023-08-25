@@ -3,12 +3,12 @@ package ru.practicum.shareit.item.dto;
 import lombok.Data;
 import ru.practicum.shareit.validated.Create;
 import ru.practicum.shareit.validated.Update;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
-
 public class ItemDtoWithRequests {
     private Long id;
 

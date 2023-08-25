@@ -1,6 +1,7 @@
 package ru.practicum.shareit.intergrationTest;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class RequestServiceTest {
     private UserDto userDto1;
     private ItemRequestDto itemRequestDto;
     private List<ItemDto> items = new ArrayList<>();
+    List<ItemRequestDto> requests;
 
     @BeforeEach
     public void init() throws EmailAlreadyExists, EntityNotFoundException {
@@ -65,7 +67,6 @@ public class RequestServiceTest {
         itemRequestDto.setItems(items);
     }
 
-
     @Test
     public void createRequestTest() throws EntityNotFoundException {
         ItemRequestDto itemRequestDto1 = requestService.addItemRequest(itemRequestDto, userDto1.getId());
@@ -73,21 +74,56 @@ public class RequestServiceTest {
     }
 
     @Test
+    public void createRequestTestException() {
+        try {
+            itemRequestDto.setId(99L);
+            requestService.addItemRequest(itemRequestDto, userDto1.getId());
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
+        try {
+            requestService.addItemRequest(itemRequestDto, 99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
+    }
+
+    @Test
     public void getUserRequestsTest() throws EntityNotFoundException {
         requestService.addItemRequest(itemRequestDto, userDto1.getId());
 
-        List<ItemRequestDto> requests = requestService.getRequests(userDto1.getId());
+        requests = requestService.getRequests(userDto1.getId());
 
         assertThat(requests.size(), equalTo(1));
+    }
+
+    @Test
+    public void getUserRequestsTestException() throws EntityNotFoundException {
+        requestService.addItemRequest(itemRequestDto, userDto1.getId());
+        try {
+            requestService.getRequests(99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 
     @Test
     public void getOtherUsersRequestsTest() throws EntityNotFoundException {
         requestService.addItemRequest(itemRequestDto, userDto1.getId());
 
-        List<ItemRequestDto> requests = requestService.getItemRequests(userDto1.getId(), 0, 10);
+        requests = requestService.getItemRequests(userDto1.getId(), 0, 10);
 
         assertThat(requests.size(), equalTo(0));
+    }
+
+    @Test
+    public void getOtherUsersRequestsTestException() throws EntityNotFoundException {
+        requestService.addItemRequest(itemRequestDto, userDto1.getId());
+        try {
+            requestService.getItemRequests(99L, 0, 10);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 
     @Test
@@ -97,6 +133,22 @@ public class RequestServiceTest {
         ItemRequestDto itemRequestDto1 = requestService.getItemRequest(itemRequestDtoWithId.getId(), userDto1.getId());
 
         test(itemRequestDto1);
+    }
+
+    @Test
+    public void getOneRequestTestException() throws EntityNotFoundException {
+        ItemRequestDto itemRequestDtoWithId = requestService.addItemRequest(itemRequestDto, userDto1.getId());
+
+        try {
+            requestService.getItemRequest(99L, userDto1.getId());
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
+        try {
+            requestService.getItemRequest(itemRequestDtoWithId.getId(), 99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 
     private void test(ItemRequestDto itemRequestDtoTest) {

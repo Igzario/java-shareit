@@ -1,6 +1,7 @@
 package ru.practicum.shareit.intergrationTest;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,13 @@ public class UserServiceTest {
     private UserServiceImpl userService;
     private UserDto userDto = new UserDto();
     private UserDto user;
+    UserDto userDto1;
 
     @BeforeEach
     public void init() throws EmailAlreadyExists {
         userDto.setName("Max");
         userDto.setEmail("qwe@qwe.com");
         user = userService.addNewUser(userDto);
-
-
     }
 
     @Test
@@ -53,15 +53,34 @@ public class UserServiceTest {
         assertThat(userDto1.getId(), notNullValue());
         assertThat(userDto1.getName(), equalTo("Pavel"));
         assertThat(userDto1.getEmail(), equalTo(userDto.getEmail()));
+
+        try {
+            userService.updateUser(userDto2, 99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
+
+        try {
+            userDto2.setEmail("qwe@qwe.com");
+            userService.updateUser(userDto2, user.getId());
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EmailAlreadyExists.class);
+        }
     }
 
     @Test
     public void findUserTest() throws EntityNotFoundException {
-        UserDto userDto1 = userService.findUserDtoById(user.getId());
+        userDto1 = userService.findUserDtoById(user.getId());
 
         assertThat(userDto1.getId(), notNullValue());
         assertThat(userDto1.getName(), equalTo(userDto.getName()));
         assertThat(userDto1.getEmail(), equalTo(userDto.getEmail()));
+
+        try {
+            userDto1 = userService.findUserDtoById(99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 
     @Test
@@ -73,10 +92,22 @@ public class UserServiceTest {
         userService.addNewUser(userDto1);
         List<UserDto> users = userService.getAllUsers();
         assertThat(users.size(), equalTo(2));
+
+        try {
+            userDto1.setEmail("qwe@qwe.com");
+            userService.addNewUser(userDto1);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EmailAlreadyExists.class);
+        }
     }
 
     @Test
     void deleteUserTest() throws EntityNotFoundException {
         userService.deleteUser(user.getId());
+        try {
+            userService.deleteUser(99L);
+        } catch (Exception e) {
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
+        }
     }
 }

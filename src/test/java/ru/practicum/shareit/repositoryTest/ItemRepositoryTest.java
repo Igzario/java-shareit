@@ -1,4 +1,5 @@
 package ru.practicum.shareit.repositoryTest;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,14 @@ public class ItemRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    void test() throws EntityNotFoundException {
+    void testRepository() throws EntityNotFoundException {
         EntityManager em1 = em.getEntityManager();
+
         UserDto userDto = new UserDto();
         userDto.setId(1L);
         userDto.setName("Max");
         userDto.setEmail("qwe@qwe.com");
+
         ItemDto itemDto = new ItemDto();
         itemDto.setId(null);
         itemDto.setName("ItemName");

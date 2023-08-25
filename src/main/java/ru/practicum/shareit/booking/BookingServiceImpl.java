@@ -74,6 +74,10 @@ public class BookingServiceImpl implements BookingService {
             log.info("Сгенерирован EntityNotFoundException - User");
             return new EntityNotFoundException(User.class, userId);
         });
+        User userCheck = userRepository.findById(userId).orElseThrow(() -> {
+            log.info("Сгенерирован EntityNotFoundException - User");
+            return new EntityNotFoundException(User.class, userId);
+        });
         Item item = itemRepository.findById(booking.getItemId()).orElseThrow(() -> {
             log.info("Сгенерирован EntityNotFoundException - Item");
             return new UserNotHaveThisItemException(userId, booking.getItemId());

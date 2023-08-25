@@ -23,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto addNewUser(@Validated(Create.class) @RequestBody ItemDto itemDto,
+    public ItemDto addNewItem(@Validated(Create.class) @RequestBody ItemDto itemDto,
                               @RequestHeader(value = header) Long userId) throws EntityNotFoundException {
         log.info("Запрос на добавление Item {} с userId {}", itemDto, userId);
         return itemService.addNewItem(itemDto, userId);

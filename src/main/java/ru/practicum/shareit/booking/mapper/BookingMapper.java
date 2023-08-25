@@ -11,7 +11,9 @@ import ru.practicum.shareit.user.dto.UserDto;
 @UtilityClass
 public class BookingMapper {
     public BookingDto toBookingDto(Booking booking, UserDto userDto, ItemDto itemDto) {
-        BookingDto bookingDto = new BookingDto(booking.getStartDate(), booking.getEndDate());
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setStart(booking.getStartDate());
+        bookingDto.setEnd(booking.getEndDate());
         bookingDto.setId(booking.getId());
         bookingDto.setStatus(booking.getStatus());
         bookingDto.setBooker(userDto);
