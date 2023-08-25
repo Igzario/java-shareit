@@ -9,13 +9,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.EntityNotFoundException;
-import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.itemRequest.ItemRequestRepository;
 import ru.practicum.shareit.itemRequest.model.ItemRequest;
-import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.EntityManager;
