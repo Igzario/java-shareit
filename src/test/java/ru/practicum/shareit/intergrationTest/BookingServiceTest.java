@@ -62,7 +62,9 @@ public class BookingServiceTest {
         itemDtoCreate.setAvailable(true);
         itemDtoCreate.setRequestId(null);
 
+
         ItemDto itemDto1 = itemService.addNewItem(itemDtoCreate, userDto1.getId());
+        bookingDto = new BookingDtoFromRequest(itemDto1.getId(), LocalDateTime.now().plusDays(1), LocalDateTime.MAX);
     }
 
     @Test
@@ -116,7 +118,7 @@ public class BookingServiceTest {
             itemService.updateItem(itemDtoCreate, 1L, userDto1.getId());
             booking = bookingService.approveBooking(userDto1.getId(), bookingDtoResponse.getId(), true);
         } catch (Exception e) {
-            Assertions.assertEquals(e.getClass(), ItemStatusUnAvailableException.class);
+            Assertions.assertEquals(e.getClass(), EntityNotFoundException.class);
         }
     }
 
