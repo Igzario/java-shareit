@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -16,17 +17,18 @@ import java.time.LocalDateTime;
 
 @Data
 @StartBeforeEndDateValid
+@NoArgsConstructor
 public class BookingDto {
     @Id
-    private final Long id;
+    private Long id;
     @NonNull
     @FutureOrPresent
-    private final LocalDateTime start;
+    private LocalDateTime start;
     @NonNull
     @Future
-    private final LocalDateTime end;
+    private LocalDateTime end;
     @Enumerated(EnumType.STRING)
-    private final Status status;
-    private final UserDto booker;
-    private final ItemDto item;
+    private Status status;
+    private UserDto booker;
+    private ItemDto item;
 }

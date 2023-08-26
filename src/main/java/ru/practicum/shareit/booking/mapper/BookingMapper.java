@@ -11,14 +11,14 @@ import ru.practicum.shareit.user.dto.UserDto;
 @UtilityClass
 public class BookingMapper {
     public BookingDto toBookingDto(Booking booking, UserDto userDto, ItemDto itemDto) {
-        return new BookingDto(
-                booking.getId(),
-                booking.getStartDate(),
-                booking.getEndDate(),
-                booking.getStatus(),
-                userDto,
-                itemDto
-        );
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setStart(booking.getStartDate());
+        bookingDto.setEnd(booking.getEndDate());
+        bookingDto.setId(booking.getId());
+        bookingDto.setStatus(booking.getStatus());
+        bookingDto.setBooker(userDto);
+        bookingDto.setItem(itemDto);
+        return bookingDto;
     }
 
     public Booking toDtoBooking(BookingDtoFromRequest bookingDtoFromRequest) {
@@ -29,9 +29,9 @@ public class BookingMapper {
     }
 
     public BookingDtoForItemOwner bookingDtoForItemOwner(Booking booking) {
-        return new BookingDtoForItemOwner(
-                booking.getId(),
-                booking.getBookerId()
-        );
+        BookingDtoForItemOwner bookingDtoForItemOwner = new BookingDtoForItemOwner();
+        bookingDtoForItemOwner.setBookerId(booking.getBookerId());
+        bookingDtoForItemOwner.setId(booking.getId());
+        return bookingDtoForItemOwner;
     }
 }

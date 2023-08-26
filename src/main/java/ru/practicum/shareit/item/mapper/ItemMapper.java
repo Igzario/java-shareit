@@ -1,4 +1,5 @@
 package ru.practicum.shareit.item.mapper;
+
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDtoForItemOwner;
 import ru.practicum.shareit.comment.dto.CommentDto;
@@ -12,13 +13,17 @@ import java.util.ArrayList;
 @UtilityClass
 public class ItemMapper {
     public ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.isAvailable(),
-                item.getRequest() != null ? item.getRequest() : null
-        );
+        ItemDto itemDto = new ItemDto();
+        itemDto.setId(item.getId());
+        itemDto.setName(item.getName());
+        itemDto.setDescription(item.getDescription());
+        itemDto.setAvailable(item.getAvailable());
+        if (item.getRequest() != null) {
+            itemDto.setRequestId(item.getRequest());
+        } else {
+            itemDto.setRequestId(null);
+        }
+        return itemDto;
     }
 
     public Item toDtoItem(ItemDto itemDto) {
@@ -27,6 +32,7 @@ public class ItemMapper {
         newItem.setName(itemDto.getName());
         newItem.setDescription(itemDto.getDescription());
         newItem.setAvailable(itemDto.getAvailable());
+        newItem.setRequest(itemDto.getRequestId());
         return newItem;
     }
 
@@ -44,13 +50,11 @@ public class ItemMapper {
     }
 
     public ItemDtoWithComments toItemDtoWithComments(Item item, BookingDtoForItemOwner lastBooking, BookingDtoForItemOwner nextBooking, ArrayList<CommentDto> comments) {
-        ItemDtoWithComments itemDtoWithComments = new ItemDtoWithComments(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.isAvailable(),
-                item.getRequest() != null ? item.getRequest() : null
-        );
+        ItemDtoWithComments itemDtoWithComments = new ItemDtoWithComments();
+        itemDtoWithComments.setId(item.getId());
+        itemDtoWithComments.setName(item.getName());
+        itemDtoWithComments.setDescription(item.getDescription());
+        itemDtoWithComments.setAvailable(item.getAvailable());
         itemDtoWithComments.setNextBooking(nextBooking);
         itemDtoWithComments.setLastBooking(lastBooking);
         itemDtoWithComments.setComments(comments);

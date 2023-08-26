@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @UtilityClass
 public class CommentMapper {
     public CommentDto toCommentDto(Comment comment, User autor) {
-        return new CommentDto(
-                comment.getId(),
-                comment.getText(),
-                autor.getName(),
-                comment.getCreated()
-        );
+        CommentDto commentDto = new CommentDto();
+        commentDto.setId(comment.getId());
+        commentDto.setText(comment.getText());
+        commentDto.setCreated(comment.getCreated());
+        commentDto.setAuthorName(autor.getName());
+        return commentDto;
     }
 
     public Comment toComment(CommentDto commentDto, Item item, User author) {
@@ -27,6 +27,5 @@ public class CommentMapper {
         comment.setAuthorId(author.getId());
         comment.setCreated(LocalDateTime.now());
         return comment;
-
     }
 }
