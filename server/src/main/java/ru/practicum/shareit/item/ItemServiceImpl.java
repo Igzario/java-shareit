@@ -48,7 +48,7 @@ public class ItemServiceImpl implements ItemService {
                     comment, autor));
         });
         if (item.getOwner().equals(userID)) {
-            List<Booking> bookings = bookingRepository.findBookingByItemIdAndStatusIsNotAndEndDateAfterOrderByStartDate(itemId, Status.REJECTED, LocalDateTime.now().minusSeconds(5));
+            List<Booking> bookings = bookingRepository.findBookingByItemIdAndStatusIsNotAndEndDateAfterOrderByStartDate(itemId, "REJECTED", LocalDateTime.now().minusSeconds(5));
             if (bookings.isEmpty()) {
                 return ItemMapper.toItemDtoWithComments(item, lastBooking, nextBooking, commentDtoList);
             }
@@ -105,7 +105,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     @Override
     public List<ItemDtoForOwner> getItemsByUser(Long userId) {
-        List<Item> items = itemRepository.findByOwner(userId);
+        List<Item> items = itemRepository.findByOwnerOrderById(userId);
         List<ItemDtoForOwner> itemsList = new ArrayList<>();
         items.forEach(item -> {
             if (item.getOwner().equals(userId)) {
@@ -145,7 +145,7 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(User.class, userId));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException(Item.class, itemId));
         Comment comment = null;
-        List<Long> bookingList = bookingRepository.findBookingsToAddComment(userId, itemId, LocalDateTime.now(), Status.APPROVED);
+        List<Long> bookingList = bookingRepository.findBookingsToAddComment(userId, itemId, LocalDateTime.now(), "APPROVED");
         if (!bookingList.isEmpty()) {
             comment = CommentMapper.toComment(commentDto, item, user);
             commentRepository.save(comment);

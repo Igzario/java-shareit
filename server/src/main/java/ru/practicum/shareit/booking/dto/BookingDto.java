@@ -28,7 +28,7 @@ public class BookingDto {
     @Future
     private LocalDateTime end;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private String status;
     private UserDto booker;
     private ItemDto item;
 }

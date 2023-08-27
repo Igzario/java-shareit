@@ -50,7 +50,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking;
         if (item.getAvailable()) {
             booking = BookingMapper.toDtoBooking(bookingDtoFromRequest);
-            booking.setStatus(Status.WAITING);
+            booking.setStatus("WAITING");
             booking.setItemId(item.getId());
             booking.setBookerId(userId);
             bookingRepository.save(booking);
@@ -84,14 +84,14 @@ public class BookingServiceImpl implements BookingService {
         });
         if (item.getOwner().equals(userId)) {
             if (approved) {
-                if (booking.getStatus() != Status.APPROVED) {
-                    booking.setStatus(Status.APPROVED);
+                if (!booking.getStatus().equals("APPROVED")) {
+                    booking.setStatus("APPROVED");
                 } else {
                     log.info("Сгенерирован BookingAlwaysApprovedException");
                     throw new BookingAlwaysApprovedException(bookingId);
                 }
             } else {
-                booking.setStatus(Status.REJECTED);
+                booking.setStatus("REJECTED");
             }
         } else {
             log.info("Сгенерирован UserNotHaveThisItemException");
@@ -143,10 +143,10 @@ public class BookingServiceImpl implements BookingService {
                 bookingList = bookingRepository.findBookingsByBookerIdAndStartDateAfterOrderByStartDateDesc(userId, LocalDateTime.now().minusSeconds(5));
                 break;
             case ("WAITING"):
-                bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, Status.WAITING);
+                bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, "WAITING");
                 break;
             case ("REJECTED"):
-                bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, Status.REJECTED);
+                bookingList = bookingRepository.findBookingsByBookerIdAndStatus(userId, "REJECTED");
                 break;
             case ("CURRENT"):
                 bookingList = bookingRepository.findBookingsByBookerIdAndStartDateBeforeAndEndDateAfter(userId, LocalDateTime.now(), LocalDateTime.now());
@@ -193,10 +193,10 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.getAllBookingItemsForUserFuture(userId, LocalDateTime.now().minusSeconds(4));
                 break;
             case ("WAITING"):
-                bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, Status.WAITING);
+                bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, "WAITING");
                 break;
             case ("REJECTED"):
-                bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, Status.REJECTED);
+                bookings = bookingRepository.getAllBookingItemsForUserStatus(userId, "REJECTED");
                 break;
             case ("CURRENT"):
                 bookings = bookingRepository.findBookingsCurrent(userId, LocalDateTime.now());

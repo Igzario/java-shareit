@@ -22,8 +22,7 @@ public class Booking {
     @Column(name = "end_date")
     @NonNull
     private LocalDateTime endDate;
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private String status;
     @Column(name = "booker_id")
     private Long bookerId;
     @Column(name = "item_id")

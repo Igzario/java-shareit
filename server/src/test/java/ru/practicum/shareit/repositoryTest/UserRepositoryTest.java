@@ -43,7 +43,6 @@ public class UserRepositoryTest {
                 .setParameter(2, "alex@email.com")
                 .executeUpdate();
 
-
         User user = new User();
         user.setName("Oleg");
         user.setEmail("ol@mail.com");
