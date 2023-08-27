@@ -100,7 +100,7 @@ public class BookingServiceTest {
     public void approveBookingTest() throws ItemStatusUnAvailableException, UserIsOwnerItemException, TimeBookingException, EntityNotFoundException, BookingAlwaysApprovedException, UserNotHaveThisItemException {
         bookingDtoResponse = bookingService.addBooking(bookingDto, userDtoBooker1.getId());
         booking = bookingService.approveBooking(userDto1.getId(), bookingDtoResponse.getId(), true);
-        assertThat(booking.getStatus(), equalTo(Status.APPROVED));
+        assertThat(booking.getStatus(), equalTo("APPROVED"));
     }
 
     @Test

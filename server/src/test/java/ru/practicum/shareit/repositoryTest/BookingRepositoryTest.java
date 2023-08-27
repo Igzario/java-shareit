@@ -76,7 +76,7 @@ public class BookingRepositoryTest {
         booking.setBookerId(1L);
         booking.setStartDate(LocalDateTime.now());
         booking.setEndDate(LocalDateTime.now().plusHours(1));
-        booking.setStatus(Status.WAITING);
+        booking.setStatus("WAITING");
         em.persist(booking);
 
         Item itemSearch1 = itemRepository.findById(1L).orElseThrow(() -> {
@@ -107,7 +107,7 @@ public class BookingRepositoryTest {
         Assertions.assertEquals(2L, booking2.getId());
         Assertions.assertEquals(1L, booking2.getItemId());
 
-        List<Long> list = bookingRepository.getAllBookingItemsForUserStatus(1L, Status.WAITING);
+        List<Long> list = bookingRepository.getAllBookingItemsForUserStatus(1L, "WAITING");
         Assertions.assertEquals(2, list.size());
 
         List<Booking> listBookings = bookingRepository.findBookingsByBookerIdAndEndDateBeforeOrderByStartDateDesc(1L, LocalDateTime.now().plusHours(2));
