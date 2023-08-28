@@ -20,23 +20,23 @@ public class UserClient extends BaseClient {
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }
 
-    public ResponseEntity<Object> getAll() {
+    public ResponseEntity<Object> getAllUsers() {
         return get("");
     }
 
-    public ResponseEntity<Object> get(long userId) {
+    public ResponseEntity<Object> getUser(long userId) {
         return get("/" + userId);
     }
 
-    public ResponseEntity<Object> create(UserDto userDto) {
+    public ResponseEntity<Object> addNewUser(UserDto userDto) {
         return post("", userDto);
     }
 
-    public ResponseEntity<Object> update(long userId, UserDto userDto) {
+    public ResponseEntity<Object> updateUser(long userId, UserDto userDto) {
         return patch("/" + userId, userDto);
     }
 
-    public void delete(long userId) {
+    public void deleteUser(long userId) {
         delete("/" + userId);
     }
 }

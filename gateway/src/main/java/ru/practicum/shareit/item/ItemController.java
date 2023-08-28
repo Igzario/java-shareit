@@ -2,7 +2,6 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,60 +19,52 @@ import javax.validation.constraints.PositiveOrZero;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemClient itemClient;
-    private final String header = "X-Sharer-User-Id";
+    private static final String HEADER_REQUEST = "X-Sharer-User-Id";
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> addNewItem(@Validated(Create.class) @RequestBody ItemDto itemDto,
-                                             @RequestHeader(value = header) Long userId) {
+                                             @RequestHeader(value = HEADER_REQUEST) Long userId) {
         log.info("Запрос на добавление Item {} с userId {}", itemDto, userId);
-        return itemClient.save(userId, itemDto);
+        return itemClient.addNewItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> updateItem(
-            @Validated(Update.class) @RequestBody ItemDto itemDto,
-            @PathVariable long itemId, @RequestHeader(value = header) Long userId) {
+    public ResponseEntity<Object> updateItem(@Validated(Update.class) @RequestBody ItemDto itemDto,
+                                             @PathVariable long itemId, @RequestHeader(value = HEADER_REQUEST) Long userId) {
         log.info("Запрос на обновление Item с ID {}", itemId);
-        return itemClient.update(userId, itemId, itemDto);
+        return itemClient.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getItem(@PathVariable long itemId,
-                                          @RequestHeader(value = header) Long userId) {
+                                          @RequestHeader(value = HEADER_REQUEST) Long userId) {
         log.info("Запрос на вывод Item с ID {} от пользователя с ID {}", itemId, userId);
-        return itemClient.get(itemId, userId);
+        return itemClient.getItem(itemId, userId);
     }
 
     @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> getItems(
-            @RequestHeader(value = header) long userId,
-            @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
-            @Positive @RequestParam(required = false, defaultValue = "3") int size) {
+    public ResponseEntity<Object> getItems(@RequestHeader(value = HEADER_REQUEST) long userId,
+                                           @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                           @Positive @RequestParam(defaultValue = "3") int size) {
         log.info("Запрос на вывод Items пользователя с ID {}", userId);
         return itemClient.getItems(userId, from, size);
     }
 
     @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> searchItems(
-            @RequestHeader(value = header) Long userId, @RequestParam(defaultValue = "", required = false) String text,
-            @PositiveOrZero @RequestParam(required = false, defaultValue = "0") int from,
-            @Positive @RequestParam(required = false, defaultValue = "3") int size) {
+    public ResponseEntity<Object> searchItems(@RequestHeader(value = HEADER_REQUEST) Long userId,
+                                              @RequestParam(defaultValue = "") String text,
+                                              @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                              @Positive @RequestParam(defaultValue = "3") int size) {
 
         log.info("Запрос на поиск Item по тексту: {}", text);
-        return itemClient.search(text, userId, from, size);
+        return itemClient.searchItems(text, userId, from, size);
     }
 
     @PostMapping("/{itemId}/comment")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> addComment(@RequestHeader(value = header) Long userId,
+    public ResponseEntity<Object> addComment(@RequestHeader(value = HEADER_REQUEST) Long userId,
                                              @Validated(Create.class) @RequestBody CommentDto commentDto,
                                              @PathVariable Long itemId) {
         log.info("Запрос на добавление комментария к Item с ID {} от пользователя с ID {}", itemId, userId);
-        return itemClient.saveComment(itemId, userId, commentDto);
+        return itemClient.addComment(itemId, userId, commentDto);
     }
 }

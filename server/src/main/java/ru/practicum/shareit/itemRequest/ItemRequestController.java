@@ -18,13 +18,13 @@ import java.util.List;
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
     private final ItemRequestService itemRequestService;
-    private final String header = "X-Sharer-User-Id";
+    private static final String HEADER_REQUEST = "X-Sharer-User-Id";
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemRequestDto itemRequestDto(
             @Validated @RequestBody ItemRequestDto itemRequestDto,
-            @RequestHeader(value = header) Long userId)
+            @RequestHeader(value = HEADER_REQUEST) Long userId)
             throws EntityNotFoundException {
         log.info("Запрос на добавление запроса от User'a c ID {}", userId);
         return itemRequestService.addItemRequest(itemRequestDto, userId);
@@ -33,7 +33,7 @@ public class ItemRequestController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ItemRequestDto> getRequests(
-            @RequestHeader(value = header) Long userId)
+            @RequestHeader(value = HEADER_REQUEST) Long userId)
             throws EntityNotFoundException {
         log.info("Запрос на вывод запросов от пользователя с ID {}", userId);
         return itemRequestService.getRequests(userId);
@@ -42,7 +42,7 @@ public class ItemRequestController {
     @GetMapping("/{requestId}")
     @ResponseStatus(HttpStatus.OK)
     public ItemRequestDto getRequest(
-            @RequestHeader(value = header) Long userId, @PathVariable Long requestId)
+            @RequestHeader(value = HEADER_REQUEST) Long userId, @PathVariable Long requestId)
             throws EntityNotFoundException {
         log.info("Запрос на вывод Бронирования с ID {} от пользователя с ID {}", requestId, userId);
         return itemRequestService.getItemRequest(requestId, userId);
@@ -51,7 +51,7 @@ public class ItemRequestController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemRequestDto> getAllRequests(
-            @RequestHeader(value = header) Long userId,
+            @RequestHeader(value = HEADER_REQUEST) Long userId,
             @RequestParam(value = "from", required = false) @PositiveOrZero Integer from,
             @RequestParam(value = "size", required = false) @Positive Integer size)
             throws EntityNotFoundException {

@@ -21,13 +21,14 @@ import java.util.List;
 @RequestMapping(path = "/bookings")
 public class BookingController {
     private final BookingService bookingService;
-    private final String header = "X-Sharer-User-Id";
+    private static final String HEADER_REQUEST = "X-Sharer-User-Id";
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookingDto addBooking(
             @Validated @RequestBody BookingDtoFromRequest bookingDtoFromRequest,
-            @RequestHeader(value = header) Long userId)
+            @RequestHeader(value = HEADER_REQUEST) Long userId)
             throws EntityNotFoundException, ItemStatusUnAvailableException, TimeBookingException, UserIsOwnerItemException {
         log.info("Запрос на добавление бронирования Item'a с ID {} от User'a c ID {}", bookingDtoFromRequest.getItemId(), userId);
         return bookingService.addBooking(bookingDtoFromRequest, userId);
@@ -36,7 +37,7 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
     public BookingDto approveBooking(
-            @RequestHeader(value = header) Long userId, @PathVariable Long bookingId,
+            @RequestHeader(value = HEADER_REQUEST) Long userId, @PathVariable Long bookingId,
             @RequestParam("approved") Boolean approved)
             throws EntityNotFoundException, UserNotHaveThisItemException, BookingAlwaysApprovedException {
         log.info("Запрос на подтверждение/отколнение бронирования с ID {} от User'a c ID {}. Approved: {}", bookingId, userId, approved);
@@ -46,7 +47,7 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
     public BookingDto getBooking(
-            @RequestHeader(value = header) Long userId, @PathVariable Long bookingId)
+            @RequestHeader(value = HEADER_REQUEST) Long userId, @PathVariable Long bookingId)
             throws EntityNotFoundException, UserNotHaveThisItemException, BookingUserException {
         log.info("Запрос на вывод Бронирования с ID {} от пользователя с ID {}", bookingId, userId);
         return bookingService.getBooking(userId, bookingId);
@@ -55,10 +56,10 @@ public class BookingController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<BookingDto> getAllBookingsForUser(
-            @RequestHeader(value = header) Long userId,
+            @RequestHeader(value = HEADER_REQUEST) Long userId,
             @RequestParam(value = "state", defaultValue = "ALL") String state,
             @RequestParam(value = "from", required = false) @PositiveOrZero Integer from,
-            @Validated @Positive @RequestParam(value = "size", required = false) Integer size)
+            @Validated @RequestParam(value = "size", required = false) @Positive Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
         log.info("Запрос на вывод всех Бронирований от пользователя с ID {}", userId);
         return bookingService.getAllBookingsForUser(userId, state, from, size);
@@ -67,10 +68,10 @@ public class BookingController {
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
     public List<BookingDto> getAllBookingsForUserOwner(
-            @RequestHeader(value = header) Long userId,
+            @RequestHeader(value = HEADER_REQUEST) Long userId,
             @RequestParam(value = "state", defaultValue = "ALL") String state,
             @RequestParam(value = "from", required = false) @PositiveOrZero Integer from,
-            @RequestParam(value = "size", required = false) @Positive Integer size)
+            @Validated @RequestParam(value = "size", required = false) @Positive Integer size)
             throws EntityNotFoundException, UserNotHaveThisItemException, UnsupportedStatusException {
         log.info("Запрос на вывод всех Бронирований от пользователя с ID {}", userId);
         return bookingService.getAllBookingItemsForUser(userId, state, from, size);

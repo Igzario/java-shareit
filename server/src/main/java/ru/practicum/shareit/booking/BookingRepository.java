@@ -1,12 +1,10 @@
 package ru.practicum.shareit.booking;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.practicum.shareit.booking.enums.Status;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,10 +44,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "select b.id, b.startDate from Booking b join Item i on i.id=b.itemId where i.owner=:userId and b.endDate<:localDateTime order by b.startDate DESC ")
     List<Long> findBookingsPast(@Param("userId") Long userId, @Param("localDateTime") LocalDateTime localDateTimeNow);
 
-    //String s = ("select * from Bookings b where b.id="+itemId+" and  status not in ('"+status+"') and b.end_date>"+now+" order by start_date");
-    //@Query("select b from Booking b  where  b.id=:itemId and b.status not in (:status) and b.endDate>:now order by b.startDate")
-    //@Qualifier("select * from Bookings b where b.id="+itemId+" and  status not in ('"+status+"') and b.end_date>"+now+" order by start_date")
-    //@Query("select b from Booking b where b.id=:itemId and b.status not in ('rejected') and b.endDate>:now order by b.startDate")
     List<Booking> findBookingByItemIdAndStatusIsNotAndEndDateAfterOrderByStartDate(@Param("itemId") Long itemId, @Param("status") String status, @Param("now") LocalDateTime now);
 
     List<Booking> findBookingByItemId(Long itemId);

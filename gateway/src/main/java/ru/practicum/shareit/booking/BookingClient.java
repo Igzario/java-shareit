@@ -43,7 +43,7 @@ public class BookingClient extends BaseClient {
         }
     }
 
-    public ResponseEntity<Object> bookItem(long userId, BookItemRequestDto requestDto) {
+    public ResponseEntity<Object> addBooking(long userId, BookItemRequestDto requestDto) {
         return post("", userId, requestDto);
     }
 
@@ -51,7 +51,7 @@ public class BookingClient extends BaseClient {
         return get("/" + bookingId, userId);
     }
 
-    public ResponseEntity<Object> findById(long userId, long bookingId) {
+    public ResponseEntity<Object> findBookingById(long userId, long bookingId) {
         return get("/" + bookingId, userId);
     }
 
