@@ -22,15 +22,16 @@ public class ItemController {
     private static final String HEADER_REQUEST = "X-Sharer-User-Id";
 
     @PostMapping
-    public ResponseEntity<Object> addNewItem(@Validated(Create.class) @RequestBody ItemDto itemDto,
-                                             @RequestHeader(value = HEADER_REQUEST) Long userId) {
+    public ResponseEntity<Object> addNewItem(@RequestHeader(value = HEADER_REQUEST) Long userId,
+                                             @Validated(Create.class) @RequestBody ItemDto itemDto) {
         log.info("Запрос на добавление Item {} с userId {}", itemDto, userId);
         return itemClient.addNewItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Object> updateItem(@Validated(Update.class) @RequestBody ItemDto itemDto,
-                                             @PathVariable long itemId, @RequestHeader(value = HEADER_REQUEST) Long userId) {
+    public ResponseEntity<Object> updateItem(@RequestHeader(value = HEADER_REQUEST) Long userId,
+                                             @Validated(Update.class) @RequestBody ItemDto itemDto,
+                                             @PathVariable long itemId) {
         log.info("Запрос на обновление Item с ID {}", itemId);
         return itemClient.updateItem(userId, itemId, itemDto);
     }
@@ -55,7 +56,6 @@ public class ItemController {
                                               @RequestParam(defaultValue = "") String text,
                                               @PositiveOrZero @RequestParam(defaultValue = "0") int from,
                                               @Positive @RequestParam(defaultValue = "3") int size) {
-
         log.info("Запрос на поиск Item по тексту: {}", text);
         return itemClient.searchItems(text, userId, from, size);
     }
